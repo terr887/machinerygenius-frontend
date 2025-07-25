@@ -1,9 +1,13 @@
+<template>
+  <div class="flex h-screen font-sans">
+    <Sidebar />
+    <ChatBox />
+  </div>
+</template>
+
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import Sidebar from '@/components/Sidebar.vue'
+import ChatBox from '@/components/ChatBox.vue'
 </script>
 
-<template>
-  <main>
-    <TheWelcome />
-  </main>
-</template>
+<style scoped></style>
