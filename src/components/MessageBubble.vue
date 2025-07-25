@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-start space-x-3 mb-6" :class="{ 'flex-row-reverse space-x-reverse': isUser }">
+  <div class="flex items-end space-x-3 mb-6" :class="{ 'flex-row-reverse space-x-reverse': isUser }">
     <!-- Avatar -->
     <div class="flex-shrink-0">
       <div v-if="!isUser" class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
@@ -12,9 +12,9 @@
 
     <!-- Message Content -->
     <div class="flex-1 max-w-3xl">
-      <div class="p-4 rounded-lg" :class="isUser ? 'bg-blue-600 text-white ml-12' : 'bg-gray-50 text-gray-900'">
+      <div class="p-4 rounded-lg" :class="isUser ? 'bg-blue-600 text-white ml-12' : 'bg-white text-gray-900'">
         <!-- Message Text -->
-        <div v-if="message.text" class="mb-3">
+        <div v-if="message.text">
           {{ message.text }}
         </div>
 
@@ -40,13 +40,6 @@
         </div>
       </div>
 
-      <!-- Quick Actions (for bot messages) -->
-      <div v-if="!isUser && message.quickActions" class="mt-3 flex flex-wrap gap-2">
-        <button v-for="action in message.quickActions" :key="action"
-          class="px-4 py-2 bg-blue-600 text-white text-sm rounded-full hover:bg-blue-700 transition-colors">
-          {{ action }}
-        </button>
-      </div>
     </div>
   </div>
 </template>

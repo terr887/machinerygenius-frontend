@@ -1,32 +1,29 @@
 <template>
-  <div class="flex h-screen bg-gray-50">
-
-    <!-- Main Chat Area -->
-    <div class="flex-1 flex flex-col">
-      <!-- Chat Messages -->
-      <div class="flex-1 overflow-y-auto p-6">
-        <div class="w-full mx-auto">
-          <!-- Messages Container -->
-          <div class="space-y-6">
-            <MessageBubble v-for="(msg, index) in messages" :key="index" :message="msg" :isUser="msg.isUser" />
-          </div>
+  <!-- Main Chat Area -->
+  <div class="flex-1 flex flex-col bg-gray-50">
+    <!-- Chat Messages -->
+    <div class="flex-1 overflow-y-auto p-6">
+      <div class="max-w-4xl mx-auto">
+        <!-- Messages Container -->
+        <div class="space-y-6">
+          <MessageBubble v-for="(msg, index) in messages" :key="index" :message="msg" :isUser="msg.isUser" />
         </div>
       </div>
+    </div>
 
-      <!-- Input Area -->
-      <div class="border-t border-gray-200 bg-white p-4">
-        <div class="w-full mx-auto">
-          <div class="relative">
-            <input v-model="inputMessage" @keypress.enter="sendMessage" type="text" placeholder="Type your message..."
-              class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-            <button @click="sendMessage"
-              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-              </svg>
-            </button>
-          </div>
+    <!-- Input Area -->
+    <div class="p-4">
+      <div class="max-w-4xl mx-auto">
+        <div class="relative bg-white">
+          <input v-model="inputMessage" @keypress.enter="sendMessage" type="text" placeholder="Type your message..."
+            class="w-full px-5 py-3 pr-14 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          <button @click="sendMessage"
+            class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+          </button>
         </div>
       </div>
     </div>
