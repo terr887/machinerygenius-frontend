@@ -2,12 +2,12 @@
   <div class="w-72 bg-white border-r border-gray-200 flex flex-col h-full">
     <!-- Brand Header -->
     <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
-      <span class="text-blue-600 font-bold">Machinerygenius.com</span>
+      <span class="text-blue-600 font-bold">Machinery Genius</span>
     </div>
 
     <!-- New Chat Button -->
     <div class="p-2 border-b border-gray-200 sticky top-[48px] bg-white z-10">
-      <button
+      <RouterLink to="/"
         class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 transition group">
         <div class="flex items-center gap-2">
           <!-- Plus icon -->
@@ -20,7 +20,7 @@
 
           <span>New Chat</span>
         </div>
-      </button>
+      </RouterLink>
     </div>
 
     <!-- Chat List -->

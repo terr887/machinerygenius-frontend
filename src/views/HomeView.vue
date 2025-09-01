@@ -8,7 +8,7 @@
           <div class="flex items-center justify-center">
             <img src="/assets/machinery-genius.png" alt="Machinery Genius" class="w-40 h-40 object-cover rounded-full mx-auto" />
           </div>
-          <h2 class="text-xl font-semibold text-gray-900 mb-2 mt-6">Hi, I am MachineryGenius</h2>
+          <h2 class="text-xl font-semibold text-gray-900 mb-2 mt-6">Hi, I am Machinery Genius</h2>
           <p class="text-gray-600 mb-6">AI-powered support Visual diagnostic, manuals, maintenance tracking,
             part sourcing, and more.</p>
             <ChatInput :allowFileUpload="false" :is-loading="isLoading" :show-typing-indicator="isTyping" :auto-focus="true"
