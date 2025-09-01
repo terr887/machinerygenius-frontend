@@ -1,56 +1,78 @@
 <template>
-  <div class="w-64 bg-white border-r border-gray-200 flex flex-col h-full">
-    <!-- Header -->
-    <div class="p-4 border-b border-gray-200">
-      <div class="flex items-center space-x-3">
-        <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-          <span class="text-white font-semibold text-sm">MG</span>
-        </div>
-        <span class="font-medium text-gray-900">Machinery Genius</span>
-      </div>
+  <div class="w-72 bg-white border-r border-gray-200 flex flex-col h-full">
+    <!-- Brand Header -->
+    <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
+      <span class="text-blue-600 font-bold">Machinerygenius.com</span>
     </div>
 
-    <!-- Conversations Section -->
-    <div class="p-4 border-b border-gray-200">
-      <div class="flex items-center space-x-2">
-        <h2 class="text-sm font-medium text-gray-900">Conversations</h2>
-        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <!-- New Chat Button -->
+    <div class="p-2 border-b border-gray-200 sticky top-[48px] bg-white z-10">
+      <button
+        class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 transition group">
+        <div class="flex items-center gap-2">
+          <!-- Plus icon -->
+          <svg class="w-5 h-5 text-gray-500 group-hover:text-gray-700 transition" fill="none" stroke="currentColor"
+          viewBox="0 0 24 24">
           <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z">
-          </path>
+            d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
         </svg>
-      </div>
+
+          <span>New Chat</span>
+        </div>
+      </button>
     </div>
 
     <!-- Chat List -->
-    <div class="flex-1 overflow-y-auto">
-      <!-- Today Section -->
-      <div class="px-4 py-3">
-        <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Today</h3>
-        <div class="space-y-1">
-          <div class="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
-            New Chat
-          </div>
-          <div class="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
-            what is Headstock?
-          </div>
-        </div>
-      </div>
-
-      <!-- Yesterday Section -->
-      <div class="px-4 py-3">
-        <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Yesterday</h3>
-        <div class="space-y-1">
-          <div class="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
-            Previous conversation
-          </div>
-        </div>
+    <div class="flex-1 overflow-y-auto px-2 py-3 space-y-1">
+      <div v-for="session in sessions" :key="session.id" class="rounded-md transition cursor-pointer" :class="isActive(session.id)
+          ? 'bg-blue-50 text-blue-700 font-medium'
+          : 'text-gray-700 hover:bg-gray-100'
+        ">
+        <RouterLink :to="{ name: 'chat-session', params: { session: session.id } }" class="block truncate px-3 py-2">
+          <!-- Typing animation for new chats -->
+          <span v-if="session.isNew" class="typing-title">{{ session.title }}</span>
+          <span v-else>{{ session.title || 'Untitled Chat' }}</span>
+        </RouterLink>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-// Component logic can be added here
+<script setup lang="ts">
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import { useSessionStore } from "@/stores/session";
+
+const route = useRoute();
+const sessionStore = useSessionStore();
+const sessions = computed(() => sessionStore.sessions);
+
+const isActive = (id: string) => route.params.session === id;
 </script>
+
+<style scoped>
+/* ✅ Typing cursor animation */
+.typing-title::after {
+  content: "|";
+  margin-left: 2px;
+  color: #3b82f6;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+[v-cloak] {
+  display: none;
+}
+</style>

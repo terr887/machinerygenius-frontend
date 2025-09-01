@@ -4,31 +4,34 @@
     <div class="flex-1 overflow-y-auto">
       <!-- Welcome Screen (when no messages) -->
       <div class="flex items-center justify-center h-full">
-        <div class="text-center max-w-md mx-auto px-6">
-          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
+        <div class="text-center max-w-3xl mx-auto px-6">
+          <div class="flex items-center justify-center">
+            <img src="/assets/machinery-genius.png" alt="Machinery Genius" class="w-40 h-40 object-cover rounded-full mx-auto" />
           </div>
-          <h2 class="text-xl font-semibold text-gray-900 mb-2">Welcome to Botpress Chat</h2>
-          <p class="text-gray-600 mb-6">Start a conversation by typing a message below. I'm here to help!</p>
+          <h2 class="text-xl font-semibold text-gray-900 mb-2 mt-6">Hi, I am MachineryGenius</h2>
+          <p class="text-gray-600 mb-6">AI-powered support Visual diagnostic, manuals, maintenance tracking,
+            part sourcing, and more.</p>
+            <ChatInput :allowFileUpload="false" :is-loading="isLoading" :show-typing-indicator="isTyping" :auto-focus="true"
+              @send-message="handleSendMessage" placeholder="Ask me anything about machinery" :hasTopBorder="false"/>
         </div>
       </div>
     </div>
 
     <!-- Chat Input -->
-    <ChatInput :allowFileUpload="false" :is-loading="isLoading" :show-typing-indicator="isTyping" :auto-focus="true"
-      @send-message="handleSendMessage" />
   </div>
 </template>
 
 <script setup>
 import { ref, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
+import { useSessionStore } from '@/stores/session'
 import ChatInput from '@/components/ChatInput.vue'
+import api from '@/services/ApiService'
 
 const isLoading = ref(false)
 const isTyping = ref(false)
+const router = useRouter()
+const sessionStore = useSessionStore()
 
 const scrollToBottom = () => {
   const container = document.querySelector('.overflow-y-auto')
@@ -38,7 +41,22 @@ const scrollToBottom = () => {
 }
 
 const handleSendMessage = async (message) => {
-  console.log(message);
+  const res = await api.createChat(message.text)
+  const session = res.data
+
+  sessionStore.sessions.unshift({
+    id: session.session_id,
+    title: session.title,
+    created_at: new Date().toISOString(),
+    isNew: true,
+    _fullTitle: message.text
+  })
+
+  sessionStorage.setItem('pendingQuestion', message.text)
+  router.push({
+    name: 'chat-session',
+    params: { session: session.session_id }
+  })
 
   await nextTick()
   scrollToBottom()
