@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-screen font-sans relative">
-    <FullScreenLoader />
+    <!-- <FullScreenLoader /> -->
 
     <!-- Sidebar (desktop only) -->
     <Sidebar class="hidden lg:flex border-r border-gray-200" />

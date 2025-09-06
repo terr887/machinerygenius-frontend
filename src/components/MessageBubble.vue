@@ -1,72 +1,98 @@
 <template>
-  <div class="flex items-end mb-6" :class="{ 'flex-row-reverse': isUser }">
+  <div class="flex items-end mb-4 w-full" :class="{ 'flex-row-reverse': isUser }" role="article"
+    :aria-label="isUser ? 'User message' : 'Assistant message'">
     <!-- Avatar -->
-    <div class="flex-shrink-0">
-      <div class="w-9 h-9 rounded-full flex items-center justify-center shadow-sm"
-        :class="isUser ? 'bg-gray-300' : 'bg-blue-500'">
-        <span class="font-semibold text-sm" :class="isUser ? 'text-gray-700' : 'text-white'">
+    <div class="flex-shrink-0" :class="isUser ? 'ml-2' : 'mr-2'">
+      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center shadow-sm"
+        :class="isUser ? 'bg-gray-300' : 'bg-blue-500'" aria-hidden="true">
+        <span class="font-semibold text-xs sm:text-sm" :class="isUser ? 'text-gray-700' : 'text-white'">
           {{ isUser ? 'U' : 'B' }}
         </span>
       </div>
     </div>
 
     <!-- Message Content -->
-    <div class="flex-1 max-w-3xl px-3">
-      <div class="p-4 rounded-2xl shadow-sm leading-relaxed text-sm sm:text-base" :class="isUser
-        ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white ml-12'
-        : 'bg-white text-gray-800 border border-gray-100'">
-
+    <div class="flex-1">
+      <div class="rounded-2xl shadow-sm leading-relaxed text-sm sm:text-base break-words" :class="bubbleClasses"
+        :style="bubbleStyle">
         <!-- Main Summary -->
         <div v-if="message.content" class="whitespace-pre-line">
           {{ message.content }}
         </div>
 
         <!-- Advice Points -->
-        <ul v-if="message.advice_points?.length" class="space-y-2 mt-3 mb-4 text-sm">
-          <li v-for="(point, idx) in message.advice_points" :key="idx" class="flex items-start space-x-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-blue-400 mt-2"></span>
-            <span>{{ point }}</span>
+        <ul v-if="message.advice_points?.length" class="mt-3 mb-3 text-sm sm:text-sm space-y-2 pl-1">
+          <li v-for="(point, idx) in message.advice_points" :key="idx" class="flex items-start gap-2">
+            <span class="w-2 h-2 rounded-full bg-blue-400 mt-2 shrink-0"></span>
+            <span class="flex-1 text-[13px] sm:text-sm">{{ point }}</span>
           </li>
         </ul>
 
         <!-- Follow-Up Questions -->
-        <div v-if="message.followup_questions?.length" class="mt-3 pt-2 border-t border-gray-200">
-          <p class="text-xs font-semibold mb-2 opacity-70">💡 Follow-up Questions:</p>
-          <div class="space-y-1 space-x-1">
+        <div v-if="message.followup_questions?.length" class="mt-2 pt-2 border-t border-gray-200">
+          <p class="text-xs font-semibold mb-2 opacity-80">💡 Follow-up Questions:</p>
+
+          <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Follow-up questions">
             <button v-for="(q, i) in message.followup_questions" :key="i" @click="$emit('sendFollowup', q)"
-              class="px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-sm hover:bg-blue-100 hover:shadow-sm transition">
+              class="px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs sm:text-sm hover:bg-blue-100 hover:shadow-sm transition">
               {{ q }}
             </button>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-defineProps({
-  message: { type: Object, required: true },
-  isUser: { type: Boolean, default: false }
+import { computed } from 'vue'
+
+const props = defineProps(['message', 'isUser'])
+
+const bubbleClasses = computed(() => {
+  const base = 'px-3 py-2 sm:px-4 sm:py-3 text-[14px]'
+
+  const user = 'bg-gradient-to-r from-blue-600 to-blue-500 text-white'
+  const assistant = 'bg-white text-gray-800 border border-gray-100'
+
+  const userSpacing = 'ml-10 sm:ml-12'
+  const assistantSpacing = 'mr-10 sm:mr-12'
+
+  return `${base} ${props.isUser ? `${user} ${userSpacing}` : `${assistant} ${assistantSpacing}`}`
+})
+
+const bubbleStyle = computed(() => {
+  return {
+    'box-shadow': '0 2px 8px rgba(18,20,25,0.04)'
+  }
 })
 </script>
 
 <style scoped>
-/* Slight animation for the assistant's bubble */
-div[role="assistant"] {
-  animation: fadeIn 0.25s ease-in;
+.break-words {
+  word-break: break-word;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
+@media (max-width: 420px) {
+  .px-3 {
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .py-2 {
+    padding-top: 0.45rem;
+    padding-bottom: 0.45rem;
   }
+}
+
+@media (max-width: 420px) {
+  .from-blue-600 {
+    --tw-gradient-from: #2563eb;
+  }
+}
+
+button:focus {
+  outline: 3px solid rgba(59, 130, 246, 0.18);
+  outline-offset: 2px;
 }
 </style>
