@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 text-gray-800">
+  <div class="bg-gray-50">
     <div class="max-w-3xl mx-auto px-4 py-10"> <!-- NARROWER CONTAINER -->
       <!-- Header -->
       <header class="mb-8">
@@ -21,7 +21,8 @@
             </p>
             <p>
               We do not sell your personal information. Data may be shared with trusted service providers and partners
-              solely to operate and maintain the platform. Where applicable, you retain rights under local data protection
+              solely to operate and maintain the platform. Where applicable, you retain rights under local data
+              protection
               laws (e.g., access, correction, deletion) — contact us to exercise those rights.
             </p>
           </section>
@@ -34,8 +35,10 @@
             </p>
             <ul>
               <li>The system can make mistakes, omit details, or provide outdated recommendations.</li>
-              <li>Always verify critical information (weights, capacities, voltages, lubrication, repair steps, etc.) with the machine manufacturer’s official documentation or a qualified professional.</li>
-              <li>If you request information for a machine from a manufacturer we do not support, we will direct you to contact the manufacturer directly.</li>
+              <li>Always verify critical information (weights, capacities, voltages, lubrication, repair steps, etc.)
+                with the machine manufacturer’s official documentation or a qualified professional.</li>
+              <li>If you request information for a machine from a manufacturer we do not support, we will direct you to
+                contact the manufacturer directly.</li>
             </ul>
           </section>
 
@@ -43,7 +46,8 @@
             <h2>3. Safety First — Always</h2>
             <ul>
               <li>Follow all manufacturer safety instructions and OSHA or applicable regulatory safety procedures.</li>
-              <li>Turn the machine OFF and disconnect it from power before performing any inspection, maintenance, or repair.</li>
+              <li>Turn the machine OFF and disconnect it from power before performing any inspection, maintenance, or
+                repair.</li>
               <li>All electrical work must be performed by a licensed, certified electrician.</li>
               <li>Do not bypass or disable safety guards, interlocks, or protective devices.</li>
             </ul>
@@ -52,7 +56,8 @@
           <section id="risk">
             <h2>4. Use at Your Own Risk</h2>
             <p>
-              All content and guidance is provided “as-is” without warranties of any kind. You assume full responsibility
+              All content and guidance is provided “as-is” without warranties of any kind. You assume full
+              responsibility
               for any actions you take based on information from this platform. Machinery Genius and its affiliates are
               not responsible for outcomes resulting from your reliance on the information.
             </p>
@@ -88,11 +93,12 @@
           <section id="updates">
             <h2>8. Updates to This Policy</h2>
             <p>
-              We may update this Privacy & Use Policy periodically. We will post the revised effective date at the top of
+              We may update this Privacy & Use Policy periodically. We will post the revised effective date at the top
+              of
               this page. Continued use of the platform after an update constitutes acceptance of the updated policy.
             </p>
           </section>
-<!-- 
+          <!-- 
           <section id="contact">
             <h2>9. Contact</h2>
             <p>
@@ -115,16 +121,19 @@ const effectiveDateDisplay = new Date(effectiveDateISO).toLocaleDateString()
 /* Optional fine-tune: make H2 a bit smaller and tighten spacing */
 @layer components {
   .prose h2 {
-    font-size: 1.05rem; /* ~16.8px */
+    font-size: 1.05rem;
+    /* ~16.8px */
     margin-top: 1.25rem;
     margin-bottom: 0.5rem;
     line-height: 1.25;
   }
+
   .prose p {
     margin-bottom: 0.85rem;
   }
+
   /* smaller bullets spacing */
-  .prose ul > li {
+  .prose ul>li {
     margin-bottom: 0.35rem;
   }
 }

@@ -2,13 +2,8 @@
   <!-- make the page relative so absolute elements (scroll button) position correctly -->
   <div class="relative flex-1 flex flex-col bg-gray-50">
     <!-- LOADING OVERLAY (shows while chat history loads) -->
-    <div
-      v-if="isLoading"
-      class="absolute inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
-      aria-hidden="false"
-      role="status"
-      aria-live="polite"
-    >
+    <div v-if="isLoading" class="absolute inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
+      aria-hidden="false" role="status" aria-live="polite">
       <div class="loading-backdrop" aria-hidden="true"></div>
       <div class="loading-plate" role="status" aria-label="Loading chat history">
         <svg class="spinner" viewBox="0 0 50 50" aria-hidden="true">
@@ -24,7 +19,8 @@
       <!-- mobile-first: full width; increase max width on sm/md/lg -->
       <div class="mx-auto w-full max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl space-y-4 sm:space-y-6">
         <MessageBubble v-for="msg in messages" :key="msg.id" :message="msg" :isUser="msg.isUser"
-          @sendFollowup="handleFollowup" />
+          @sendFollowup="handleFollowup" @fillContext="handleFillContext" />
+
 
         <!-- WhatsApp-style typing dots (compact on mobile) -->
         <div v-if="isTyping" class="flex items-start">
@@ -59,9 +55,9 @@
     </div>
 
     <!-- Chat Input -->
-    <div class="px-3 py-3 sm:px-4 sm:py-4">
+    <div class="px-3 py-3 sm:px-4 sm:py-4 sm:pt-0 pt-0">
       <ChatInput :allowFileUpload="false" :is-loading="isLoading" :auto-focus="true"
-        @send-message="handleSendMessage" />
+        @send-message="handleSendMessage" :value="inputMessage" />
     </div>
   </div>
 </template>
@@ -79,6 +75,7 @@ import ChatInput from '@/components/ChatInput.vue'
 const router = useRouter()
 const route = useRoute()
 const sessionId = ref(route.params.session)
+const inputMessage = ref('')
 
 const uiStore = useUIStore()
 const isTyping = computed(() => uiStore.isTyping)
@@ -153,8 +150,11 @@ const sendToAI = async (question) => {
     const answer = res.data.answer
     pushMessage('assistant', answer.summary, {
       advice_points: answer.advice_points,
-      followup_questions: answer.followup_questions
+      followup_questions: answer.followup_questions,
+      need_more_context: answer.need_more_context,
+      related_models: answer.related_models
     })
+
     await tryAutoScrollOnNewMessage()
   } catch (err) {
     console.error('AI request failed:', err)
@@ -170,7 +170,12 @@ const handleSendMessage = async (message) => {
 }
 
 const handleFollowup = async (followup) => {
-  await handleSendMessage({ text: followup })
+  inputMessage.value = followup
+  // await handleSendMessage({ text: followup })
+}
+
+const handleFillContext = async (payload) => {
+  console.log(payload);
 }
 
 // SCROLL HANDLING
@@ -343,14 +348,17 @@ watch(() => route.params.session, async (newSessionId, oldSessionId) => {
 }
 
 .spinner .path {
-  stroke: #3b82f6; /* blue-500 */
+  stroke: #3b82f6;
+  /* blue-500 */
   stroke-linecap: round;
   stroke-dasharray: 90;
   stroke-dashoffset: 20;
 }
 
 @keyframes rotate {
-  100% { transform: rotate(360deg); }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* visually-hidden for SR-only text */

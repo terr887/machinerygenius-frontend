@@ -1,71 +1,53 @@
 <template>
   <div class="flex items-end mb-4 w-full" :class="{ 'flex-row-reverse': isUser }" role="article"
     :aria-label="isUser ? 'User message' : 'Assistant message'">
-    <!-- Avatar -->
-    <div class="flex-shrink-0" :class="isUser ? 'ml-2' : 'mr-2'">
-      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center shadow-sm"
-        :class="isUser ? 'bg-gray-300' : 'bg-blue-500'" aria-hidden="true">
-        <span class="font-semibold text-xs sm:text-sm" :class="isUser ? 'text-gray-700' : 'text-white'">
-          {{ isUser ? 'U' : 'B' }}
-        </span>
-      </div>
-    </div>
+    <MessageAvatar :isUser="isUser" />
 
-    <!-- Message Content -->
     <div class="flex-1">
-      <div class="rounded-2xl shadow-sm leading-relaxed text-sm sm:text-base break-words" :class="bubbleClasses"
-        :style="bubbleStyle">
-        <!-- Main Summary -->
-        <div v-if="message.content" class="whitespace-pre-line">
-          {{ message.content }}
-        </div>
-
-        <!-- Advice Points -->
-        <ul v-if="message.advice_points?.length" class="mt-3 mb-3 text-sm sm:text-sm space-y-2 pl-1">
-          <li v-for="(point, idx) in message.advice_points" :key="idx" class="flex items-start gap-2">
-            <span class="w-2 h-2 rounded-full bg-blue-400 mt-2 shrink-0"></span>
-            <span class="flex-1 text-[13px] sm:text-sm">{{ point }}</span>
-          </li>
-        </ul>
-
-        <!-- Follow-Up Questions -->
-        <div v-if="message.followup_questions?.length" class="mt-2 pt-2 border-t border-gray-200">
-          <p class="text-xs font-semibold mb-2 opacity-80">💡 Follow-up Questions:</p>
-
-          <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Follow-up questions">
-            <button v-for="(q, i) in message.followup_questions" :key="i" @click="$emit('sendFollowup', q)"
-              class="px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs sm:text-sm hover:bg-blue-100 hover:shadow-sm transition">
-              {{ q }}
-            </button>
+      <Bubble :message="message" :isUser="isUser">
+        <template #more_context>
+          <div class="mb-3 py-2 px-1 bg-yellow-50 rounded-lg" aria-live="polite" v-if="message.need_more_context">
+            <p class="text-xs text-yellow-800">Can you please provide more context for the same? e.g Model number or
+              Machine name.</p>
           </div>
-        </div>
-      </div>
+        </template>
+
+        <template #advice>
+          <AdviceList :points="message.advice_points" />
+        </template>
+
+        <template #followups>
+          <!-- related models chips -->
+          <RelatedModels :models="message.related_models" @selectModel="handleModelSelect" />
+
+          <!-- show need_more_context hint and followups -->
+          <FollowUpGroup :questions="message.followup_questions" @sendFollowup="handleFollowup" />
+        </template>
+      </Bubble>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
 
-const props = defineProps(['message', 'isUser'])
+import MessageAvatar from '@/components/partials/bubble/MessageAvatar.vue'
+import Bubble from '@/components/partials/bubble/Bubble.vue'
+import AdviceList from '@/components/partials/bubble/AdviceList.vue'
+import FollowUpGroup from '@/components/partials/bubble/FollowUpGroup.vue'
+import RelatedModels from '@/components/partials/bubble/RelatedModels.vue'
 
-const bubbleClasses = computed(() => {
-  const base = 'px-3 py-2 sm:px-4 sm:py-3 text-[14px]'
-
-  const user = 'bg-gradient-to-r from-blue-600 to-blue-500 text-white'
-  const assistant = 'bg-white text-gray-800 border border-gray-100'
-
-  const userSpacing = 'ml-10 sm:ml-12'
-  const assistantSpacing = 'mr-10 sm:mr-12'
-
-  return `${base} ${props.isUser ? `${user} ${userSpacing}` : `${assistant} ${assistantSpacing}`}`
+const emits = defineEmits(['sendFollowup', 'sendMessage', 'fillContext'])
+const props = defineProps({
+  message: { type: Object, required: true },
+  isUser: { type: Boolean, default: false }
 })
 
-const bubbleStyle = computed(() => {
-  return {
-    'box-shadow': '0 2px 8px rgba(18,20,25,0.04)'
-  }
-})
+function handleFollowup(q) { emits('sendFollowup', q) }
+
+function handleModelSelect(model) {
+  emits('sendFollowup', model)
+  emits('fillContext', { field: 'model', value: model })
+}
 </script>
 
 <style scoped>

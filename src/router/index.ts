@@ -7,6 +7,8 @@ import PrivacyPolicyView from '@/views/PrivacyPolicyView.vue'
 import AboutView from '@/views/AboutView.vue'
 import ContactView from '@/views/ContactView.vue'
 import FeedbackView from '@/views/FeedbackView.vue'
+import SupplierListing from '@/views/OemSupplier/SupplierListing.vue'
+import SingUpForm from '@/views/OemSupplier/SingUpForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,6 +37,16 @@ const router = createRouter({
       path: '/feedback',
       name: 'feedback',
       component: FeedbackView,
+    },
+    {
+      path: '/oem-partners',
+      name: 'oem-partners',
+      component: SupplierListing,
+    },
+    {
+      path: '/oem-supplier-form',
+      name: 'oem-supplier-form',
+      component: SingUpForm,
     },
     {
       path: '/privacy-policy',

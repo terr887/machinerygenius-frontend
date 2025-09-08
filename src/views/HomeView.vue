@@ -48,7 +48,7 @@ const handleSendMessage = async (message) => {
   const session = res.data
 
   sessionStore.sessions.unshift({
-    id: session.session_id,
+    uuid: session.session_id,
     title: session.title,
     created_at: new Date().toISOString(),
     isNew: true,

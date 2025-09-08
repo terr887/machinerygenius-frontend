@@ -45,6 +45,16 @@
                         Feedback
                     </RouterLink>
 
+                    <RouterLink :to="{ name: 'oem-partners' }" class="px-3 py-2 rounded-md transition"
+                        active-class="bg-blue-100 text-blue-700">
+                        OEM Manufactures
+                    </RouterLink>
+
+                    <RouterLink :to="{ name: 'oem-supplier-form' }" class="px-3 py-2 rounded-md transition"
+                        active-class="bg-blue-100 text-blue-700">
+                        Manufacturer Signup
+                    </RouterLink>
+
                     <RouterLink :to="{ name: 'privacy-policy' }" class="px-3 py-2 rounded-md transition"
                         active-class="bg-blue-100 text-blue-700">
                         Privacy Policy
@@ -82,10 +92,11 @@
             <!-- Chat Sessions -->
             <div class="px-3 py-4">
                 <h2 class="uppercase text-xs font-semibold text-gray-500 tracking-wide mb-3">Chats</h2>
-                <div v-for="session in sessions" :key="session.id" class="rounded-md transition cursor-pointer" :class="isActive(session.id)
-                    ? 'bg-blue-50 text-blue-700 font-medium'
-                    : 'text-gray-700 hover:bg-gray-100'">
-                    <RouterLink :to="{ name: 'chat-session', params: { session: session.id } }"
+                <div v-for="session in sessions" :key="session.uuid" class="rounded-md transition cursor-pointer"
+                    :class="isActive(session.uuid)
+                        ? 'bg-blue-50 text-blue-700 font-medium'
+                        : 'text-gray-700 hover:bg-gray-100'">
+                    <RouterLink :to="{ name: 'chat-session', params: { session: session.uuid } }"
                         class="block truncate px-3 py-2">
                         <span v-if="session.isNew" class="typing-title">{{ session.title }}</span>
                         <span v-else>{{ session.title || 'Untitled Chat' }}</span>

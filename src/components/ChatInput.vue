@@ -82,7 +82,6 @@
 <script setup>
 import { ref, computed, nextTick, watch } from 'vue'
 
-// Props
 const props = defineProps({
   placeholder: {
     type: String,
@@ -131,19 +130,20 @@ const props = defineProps({
   autoFocus: {
     type: Boolean,
     default: false
+  },
+  value: {
+    type: String,
+    default: ''
   }
 })
 
-// Emits
-const emit = defineEmits(['send-message', 'file-upload', 'input-change'])
+const emit = defineEmits(['send-message', 'file-upload', 'input-change', 'update:value'])
 
-// Refs
 const inputBoxRef = ref(null)
 const fileInputRef = ref(null)
-const inputMessage = ref('')
+const inputMessage = ref(props.value ?? '')
 const uploadedFiles = ref([])
 
-// Computed
 const canSend = computed(() => {
   return !props.disabled &&
     !props.isLoading &&
@@ -151,7 +151,6 @@ const canSend = computed(() => {
     (!props.maxLength || inputMessage.value.length <= props.maxLength)
 })
 
-// Methods
 const sendMessage = () => {
   if (!canSend.value) return
 
@@ -163,7 +162,6 @@ const sendMessage = () => {
 
   emit('send-message', messageData)
 
-  // Clear input and files
   inputMessage.value = ''
   uploadedFiles.value = []
   adjustHeight()
@@ -200,7 +198,6 @@ const handleFileUpload = (event) => {
 
   emit('file-upload', files)
 
-  // Clear the input so the same file can be selected again
   event.target.value = ''
 }
 
@@ -208,13 +205,20 @@ const removeFile = (index) => {
   uploadedFiles.value.splice(index, 1)
 }
 
-// Watchers
+
 watch(() => inputMessage.value, (newValue) => {
   emit('input-change', newValue)
+  emit('update:value', newValue) // enables v-model:value
   adjustHeight()
 })
 
-// Auto focus on mount
+watch(() => props.value, (newVal) => {
+  if (newVal !== inputMessage.value) {
+    inputMessage.value = newVal ?? ''
+    nextTick(adjustHeight)
+  }
+})
+
 if (props.autoFocus) {
   nextTick(() => {
     inputBoxRef.value?.focus()

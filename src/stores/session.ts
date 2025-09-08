@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 export interface Session {
-    id: string
+    uuid: string
     title: string
     created_at: string,
     isNew: boolean,
@@ -17,7 +17,7 @@ export const useSessionStore = defineStore('session', {
             this.sessions = sessions
         },
         getSessionById(id: string): Session | undefined {
-            return this.sessions.find(s => s.id === id)
+            return this.sessions.find(s => s.uuid === id)
         }
     }
 })

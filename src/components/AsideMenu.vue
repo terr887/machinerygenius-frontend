@@ -23,6 +23,16 @@
                     Feedback
                 </RouterLink>
 
+                <RouterLink :to="{ name: 'oem-partners' }" class="px-3 py-2 rounded-md transition"
+                    active-class="bg-blue-100 text-blue-700">
+                    OEM Manufactures
+                </RouterLink>
+
+                <RouterLink :to="{ name: 'oem-supplier-form' }" class="px-3 py-2 rounded-md transition"
+                    active-class="bg-blue-100 text-blue-700">
+                    Manufacturer Signup
+                </RouterLink>
+
                 <RouterLink :to="{ name: 'privacy-policy' }" class="px-3 py-2 rounded-md transition"
                     active-class="bg-blue-100 text-blue-700">
                     Privacy Policy
