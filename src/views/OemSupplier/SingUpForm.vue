@@ -1,28 +1,30 @@
 <template>
-    <div class="bg-gray-50">
+    <div class="mx-auto px-6 bg-gray-50">
         <section class="py-6">
-            <div class="container mx-auto px-6">
-                <div class="hero">
-                    <div class="hero-inner">
-                        <div class="flex items-center justify-between gap-3 flex-wrap">
-                            <h1 class="text-2xl font-bold leading-relaxed">Trusted OEM Partner Program</h1>
-                            <span class="chip">24/7 First‑Line Support</span>
-                        </div>
-                        <p class="mt-2 text-gray-700 max-w-3xl">
-                            Launch a multilingual, OEM‑qualified AI support portal that answers instantly, triages
-                            tickets,
-                            and frees your team to build the future.
-                        </p>
-                        <div class="chip-row mt-3">
-                            <span class="chip">Secure Content Controls</span>
-                            <span class="chip">Analytics &amp; Insights</span>
-                            <span class="chip">White‑Label Widget</span>
-                            <span class="chip">Global Multilingual</span>
-                        </div>
-                        <div class="mt-4 flex gap-2">
-                            <a href="#oem-form" class="px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">Apply Now</a>
-                            <a href="#benefits" class="px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">See Benefits</a>
-                        </div>
+            <div class="hero">
+                <div class="hero-inner">
+                    <div class="flex items-center justify-between gap-3 flex-wrap">
+                        <h1 class="text-2xl font-bold leading-relaxed">Trusted OEM Partner Program</h1>
+                        <span class="chip">24/7 First‑Line Support</span>
+                    </div>
+                    <p class="mt-2 text-gray-700 max-w-3xl">
+                        Launch a multilingual, OEM‑qualified AI support portal that answers instantly, triages
+                        tickets,
+                        and frees your team to build the future.
+                    </p>
+                    <div class="chip-row mt-3">
+                        <span class="chip">Secure Content Controls</span>
+                        <span class="chip">Analytics &amp; Insights</span>
+                        <span class="chip">White‑Label Widget</span>
+                        <span class="chip">Global Multilingual</span>
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <a href="#oem-form"
+                            class="px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">Apply
+                            Now</a>
+                        <a href="#benefits"
+                            class="px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">See
+                            Benefits</a>
                     </div>
                 </div>
             </div>
@@ -30,234 +32,205 @@
 
         <!-- SINGLE MARQUEE (keep this; removed mosaic) -->
         <section class="py-4">
-            <div class="container mx-auto px-6">
-                <div class="marquee" :aria-label="ariaLabel">
-                    <div class="marquee-track" ref="track">
-                        <template v-for="(item, idx) in duplicatedImages" :key="`m-${idx}-${item.src}`">
-                            <img :src="item.src" :alt="item.alt || item.name || 'machine'" loading="lazy"
-                                @error="handleError($event, idx)" class="mx-4 max-h-20 object-contain" />
-                        </template>
-                    </div>
+            <div class="marquee" :aria-label="ariaLabel">
+                <div class="marquee-track" ref="track">
+                    <template v-for="(item, idx) in duplicatedImages" :key="`m-${idx}-${item.src}`">
+                        <img :src="item.src" :alt="item.alt || item.name || 'machine'" loading="lazy"
+                            @error="handleError($event, idx)" class="mx-4 max-h-20 object-contain" />
+                    </template>
                 </div>
             </div>
         </section>
 
         <!-- BENEFITS -->
         <section id="benefits" class="py-6">
-            <div class="container mx-auto px-6">
-                <h2 class="text-xl font-bold mb-3">Why OEMs Partner with Machinery Genius</h2>
-                <div class="mg-grid">
-                    <article class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-                        <h3 class="text-lg font-semibold">24/7 First‑Line Support</h3>
-                        <p class="text-gray-700 mt-2">Instant answers for routine questions (setup, lubrication, specs,
-                            weights, voltages, basic troubleshooting) so your team handles fewer tickets—and more
-                            complex
-                            work.</p>
-                    </article>
-                    <article class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-                        <h3 class="text-lg font-semibold">OEM‑Qualified Knowledge</h3>
-                        <p class="text-gray-700 mt-2">We train the AI on <em>your</em> approved content: brochures,
-                            public
-                            specs, parts info, and safely‑ingested service data—with your distribution controls
-                            respected.
-                        </p>
-                    </article>
-                    <article class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-                        <h3 class="text-lg font-semibold">“Genius Support” Website Button</h3>
-                        <p class="text-gray-700 mt-2">Customers look for the Machinery Genius™ support badge on OEM
-                            sites.
-                            Add our button to provide immediate help and capture high‑quality leads.</p>
-                    </article>
-                    <article class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-                        <h3 class="text-lg font-semibold">Lower Cost‑Per‑Resolution</h3>
-                        <p class="text-gray-700 mt-2">Automate repetitive Q&amp;A and triage. Free your engineers for
-                            R&amp;D, upgrades, and high‑impact customer cases.</p>
-                    </article>
-                    <article class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-                        <h3 class="text-lg font-semibold">AR “Will It Fit” + Sales Assist</h3>
-                        <p class="text-gray-700 mt-2">Help prospects preview floor fit, compare models, and get matched
-                            to
-                            the right machine for their production volume.</p>
-                    </article>
-                    <article class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-                        <h3 class="text-lg font-semibold">Predictive Maintenance Ready</h3>
-                        <p class="text-gray-700 mt-2">Use technician notes and service logs to forecast failures and
-                            suggest
-                            preventative steps—reducing downtime in the field.</p>
-                    </article>
-                </div>
+            <h2 class="text-xl font-bold mb-3">Why OEMs Partner with Machinery Genius</h2>
+            <div class="mg-grid">
+                <article class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold">24/7 First‑Line Support</h3>
+                    <p class="text-gray-700 mt-2">Instant answers for routine questions (setup, lubrication, specs,
+                        weights, voltages, basic troubleshooting) so your team handles fewer tickets—and more
+                        complex
+                        work.</p>
+                </article>
+                <article class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold">OEM‑Qualified Knowledge</h3>
+                    <p class="text-gray-700 mt-2">We train the AI on <em>your</em> approved content: brochures,
+                        public
+                        specs, parts info, and safely‑ingested service data—with your distribution controls
+                        respected.
+                    </p>
+                </article>
+                <article class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold">“Genius Support” Website Button</h3>
+                    <p class="text-gray-700 mt-2">Customers look for the Machinery Genius™ support badge on OEM
+                        sites.
+                        Add our button to provide immediate help and capture high‑quality leads.</p>
+                </article>
+                <article class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold">Lower Cost‑Per‑Resolution</h3>
+                    <p class="text-gray-700 mt-2">Automate repetitive Q&amp;A and triage. Free your engineers for
+                        R&amp;D, upgrades, and high‑impact customer cases.</p>
+                </article>
+                <article class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold">AR “Will It Fit” + Sales Assist</h3>
+                    <p class="text-gray-700 mt-2">Help prospects preview floor fit, compare models, and get matched
+                        to
+                        the right machine for their production volume.</p>
+                </article>
+                <article class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold">Predictive Maintenance Ready</h3>
+                    <p class="text-gray-700 mt-2">Use technician notes and service logs to forecast failures and
+                        suggest
+                        preventative steps—reducing downtime in the field.</p>
+                </article>
             </div>
         </section>
 
         <!-- ONBOARDING (modern stepper with arrows) -->
         <section class="py-6">
-            <div class="container mx-auto px-6">
-                <h2 class="text-xl font-bold mb-3">Fast, Secure Onboarding</h2>
-                <div class="stepper">
-                    <div class="step">
-                        <h4><span class="badge b-blue">1</span> Secure Intake</h4>
-                        <p>Private portal: brochures, public specs, parts, lubrication, serial/year maps, bulletins,
-                            authorized manuals.</p>
-                    </div>
-                    <div class="step">
-                        <h4><span class="badge b-gold">2</span> Data Mapping</h4>
-                        <p>Normalize models ↔ serials ↔ years, capacities, voltages, oils, codes, accessories, upgrade
-                            kits.
-                        </p>
-                    </div>
-                    <div class="step">
-                        <h4><span class="badge b-red">3</span> AI Training</h4>
-                        <p>Industrial ML trains on approved content + public refs; QA with real setup &amp;
-                            troubleshooting.
-                        </p>
-                    </div>
-                    <div class="step">
-                        <h4><span class="badge b-slate">4</span> Widget Launch</h4>
-                        <p>Embed the Machinery Genius™ Support button with branding &amp; escalation routes.</p>
-                    </div>
-                    <div class="step">
-                        <h4><span class="badge b-blue">5</span> Analytics</h4>
-                        <p>Dashboards for questions, resolution rates, and feedback; push updates &amp; recalls anytime.
-                        </p>
-                    </div>
-                    <div class="step">
-                        <h4><span class="badge b-gold">6</span> Escalation</h4>
-                        <p>Instant answers for routine issues; seamless handoffs to live agents for complex cases.</p>
-                    </div>
-                </div>
-            </div>
+            <h2 class="text-xl font-bold mb-3">Fast, Secure Onboarding</h2>
+            <Stepper />
         </section>
 
         <!-- SECURITY & CONTROL -->
         <section class="py-6">
-            <div class="container mx-auto px-6">
-                <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-                    <h2 class="text-xl font-bold">Security, IP &amp; Control</h2>
-                    <ul class="list-disc pl-6 mt-3 text-gray-700">
-                        <li><strong>Permissions‑first ingestion:</strong> We only ingest what you authorize. Private
-                            docs
-                            are never publicly distributed by us.</li>
-                        <li><strong>Answer style:</strong> AI returns guided answers and references; downloading of
-                            source
-                            files is restricted unless you explicitly permit it.</li>
-                        <li><strong>Data isolation:</strong> Your content stays segregated and access‑controlled.</li>
-                        <li><strong>Updates &amp; recalls:</strong> Model/serial mapping supports owner notifications
-                            for
-                            changes, updates, or upgrade kits.</li>
-                        <li><strong>Compliance:</strong> We support DMCA/takedown workflows and redaction policies per
-                            your
-                            requirements.</li>
-                    </ul>
-                </div>
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+                <h2 class="text-xl font-bold">Security, IP &amp; Control</h2>
+                <ul class="list-disc pl-6 mt-3 text-gray-700">
+                    <li><strong>Permissions‑first ingestion:</strong> We only ingest what you authorize. Private
+                        docs
+                        are never publicly distributed by us.</li>
+                    <li><strong>Answer style:</strong> AI returns guided answers and references; downloading of
+                        source
+                        files is restricted unless you explicitly permit it.</li>
+                    <li><strong>Data isolation:</strong> Your content stays segregated and access‑controlled.</li>
+                    <li><strong>Updates &amp; recalls:</strong> Model/serial mapping supports owner notifications
+                        for
+                        changes, updates, or upgrade kits.</li>
+                    <li><strong>Compliance:</strong> We support DMCA/takedown workflows and redaction policies per
+                        your
+                        requirements.</li>
+                </ul>
             </div>
         </section>
 
         <!-- OEM APPLICATION FORM -->
         <section id="oem-form" class="py-6">
-            <div class="container mx-auto px-6">
-                <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-                    <h2 class="text-xl font-bold">OEM Partnership Application</h2>
-                    <p class="text-gray-700 mt-2">Tell us about your company. We’ll follow up with pricing, onboarding,
-                        and
-                        best‑practice guidance.</p>
-                    <form action="#" method="post" class="mt-4">
-                        <div class="two-col">
-                            <div class="field">
-                                <label class="req" for="company">Company Name</label>
-                                <input id="company" name="company" type="text" required>
-                            </div>
-                            <div class="field">
-                                <label class="req" for="contact">Contact Name</label>
-                                <input id="contact" name="contact" type="text" required>
-                            </div>
-                            <div class="field">
-                                <label class="req" for="phone">Phone</label>
-                                <input id="phone" name="phone" type="tel" required>
-                            </div>
-                            <div class="field">
-                                <label for="email">Email</label>
-                                <input id="email" name="email" type="email" placeholder="you@company.com">
-                                <span class="hint">Optional but recommended.</span>
-                            </div>
-                            <div class="field" style="grid-column:1 / -1;">
-                                <label class="req" for="address">Company Address</label>
-                                <textarea id="address" name="address" required></textarea>
-                            </div>
-                            <div class="field">
-                                <label class="req" for="website">Website</label>
-                                <input id="website" name="website" type="url" placeholder="https://example.com" required>
-                            </div>
-                            <div class="field">
-                                <label for="brands">Brands / Divisions</label>
-                                <input id="brands" name="brands" type="text" placeholder="e.g., ACRA, ACME Laser">
-                            </div>
-                            <div class="field" style="grid-column:1 / -1;">
-                                <label class="req" for="products">Products Offered (describe)</label>
-                                <textarea id="products" name="products" required placeholder="Machine types, model families, controller platforms, capacities, etc."></textarea>
-                            </div>
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+                <h2 class="text-xl font-bold">OEM Partnership Application</h2>
+                <p class="text-gray-700 mt-2">Tell us about your company. We’ll follow up with pricing, onboarding,
+                    and
+                    best‑practice guidance.</p>
+                <form action="#" method="post" class="mt-4">
+                    <div class="two-col">
+                        <div class="field">
+                            <label class="req" for="company">Company Name</label>
+                            <input id="company" name="company" type="text" required>
                         </div>
-
-                        <div class="divider"></div>
-                        <h3 class="text-lg font-semibold">Data &amp; Integration Preferences</h3>
-                        <div class="mg-grid" style="margin-top:12px;">
-                            <label class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-start gap-3">
-                                <input type="checkbox" name="pref_answers" class="mt-1">
-                                <span>
-                                    <strong>Allow AI to generate answers</strong> from uploaded brochures, public specifications, and authorized service info.
-                                </span>
-                            </label>
-                            <label class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-start gap-3">
-                                <input type="checkbox" name="pref_restrict" class="mt-1">
-                                <span>
-                                    <strong>Restrict distribution</strong> of proprietary files (no downloads). Answers may summarize; files remain access‑controlled.
-                                </span>
-                            </label>
-                            <label class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-start gap-3">
-                                <input type="checkbox" name="pref_register" class="mt-1">
-                                <span>
-                                    <strong>Enable product registration &amp; updates</strong> (model/serial mapping for recalls, upgrades, bulletins).
-                                </span>
-                            </label>
-                            <label class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-start gap-3">
-                                <input type="checkbox" name="pref_widget" class="mt-1">
-                                <span>
-                                    <strong>Add “Machinery Genius Support” button</strong> on our website (white‑label widget + brand styling).
-                                </span>
-                            </label>
+                        <div class="field">
+                            <label class="req" for="contact">Contact Name</label>
+                            <input id="contact" name="contact" type="text" required>
                         </div>
-
-                        <div class="mt-4 flex items-center gap-2">
-                            <button type="submit" class="px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">Submit Application</button>
-                            <a href="#benefits" class="px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">Review Benefits</a>
+                        <div class="field">
+                            <label class="req" for="phone">Phone</label>
+                            <input id="phone" name="phone" type="tel" required>
                         </div>
+                        <div class="field">
+                            <label for="email">Email</label>
+                            <input id="email" name="email" type="email" placeholder="you@company.com">
+                            <span class="hint">Optional but recommended.</span>
+                        </div>
+                        <div class="field" style="grid-column:1 / -1;">
+                            <label class="req" for="address">Company Address</label>
+                            <textarea id="address" name="address" required></textarea>
+                        </div>
+                        <div class="field">
+                            <label class="req" for="website">Website</label>
+                            <input id="website" name="website" type="url" placeholder="https://example.com" required>
+                        </div>
+                        <div class="field">
+                            <label for="brands">Brands / Divisions</label>
+                            <input id="brands" name="brands" type="text" placeholder="e.g., ACRA, ACME Laser">
+                        </div>
+                        <div class="field" style="grid-column:1 / -1;">
+                            <label class="req" for="products">Products Offered (describe)</label>
+                            <textarea id="products" name="products" required
+                                placeholder="Machine types, model families, controller platforms, capacities, etc."></textarea>
+                        </div>
+                    </div>
 
-                        <p class="hint mt-3">By submitting, you confirm any materials are authorized for these purposes.
-                            We
-                            do not publicly distribute proprietary content without your explicit permission.</p>
-                    </form>
-                </div>
+                    <div class="divider"></div>
+                    <h3 class="text-lg font-semibold">Data &amp; Integration Preferences</h3>
+                    <div class="mg-grid" style="margin-top:12px;">
+                        <label class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-start gap-3">
+                            <input type="checkbox" name="pref_answers" class="mt-1">
+                            <span>
+                                <strong>Allow AI to generate answers</strong> from uploaded brochures, public
+                                specifications,
+                                and authorized service info.
+                            </span>
+                        </label>
+                        <label class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-start gap-3">
+                            <input type="checkbox" name="pref_restrict" class="mt-1">
+                            <span>
+                                <strong>Restrict distribution</strong> of proprietary files (no downloads). Answers may
+                                summarize; files remain access‑controlled.
+                            </span>
+                        </label>
+                        <label class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-start gap-3">
+                            <input type="checkbox" name="pref_register" class="mt-1">
+                            <span>
+                                <strong>Enable product registration &amp; updates</strong> (model/serial mapping for
+                                recalls,
+                                upgrades, bulletins).
+                            </span>
+                        </label>
+                        <label class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-start gap-3">
+                            <input type="checkbox" name="pref_widget" class="mt-1">
+                            <span>
+                                <strong>Add “Machinery Genius Support” button</strong> on our website (white‑label
+                                widget +
+                                brand styling).
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="mt-4 flex items-center gap-2">
+                        <button type="submit"
+                            class="px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">Submit
+                            Application</button>
+                        <a href="#benefits"
+                            class="px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">Review
+                            Benefits</a>
+                    </div>
+
+                    <p class="hint mt-3">By submitting, you confirm any materials are authorized for these purposes.
+                        We
+                        do not publicly distribute proprietary content without your explicit permission.</p>
+                </form>
             </div>
         </section>
 
         <!-- CTA -->
         <section class="py-6">
-            <div class="container mx-auto px-6">
-                <div
-                    class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm flex items-center justify-between flex-wrap gap-3">
-                    <div>
-                        <h2 class="text-xl font-bold">Ready to add the Genius Support button?</h2>
-                        <p class="text-gray-700">Customers are looking for Machinery Genius™ support on OEM sites. Let’s
-                            make sure yours has it.</p>
-                    </div>
-                    <a href="#oem-form"
-                        class="px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">Inquire for Pricing</a>
+            <div
+                class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm flex items-center justify-between flex-wrap gap-3">
+                <div>
+                    <h2 class="text-xl font-bold">Ready to add the Genius Support button?</h2>
+                    <p class="text-gray-700">Customers are looking for Machinery Genius™ support on OEM sites. Let’s
+                        make sure yours has it.</p>
                 </div>
+                <a href="#oem-form"
+                    class="px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">Inquire
+                    for Pricing</a>
             </div>
         </section>
     </div>
 </template>
 
 <script setup>
+import Stepper from '@/components/Stepper.vue'
 import { ref, computed } from 'vue'
 
 

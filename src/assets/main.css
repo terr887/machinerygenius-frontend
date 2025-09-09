@@ -1,2 +1,17 @@
 @import "tailwindcss";
 @plugin '@tailwindcss/typography';
+
+@layer utilities {
+  .bg-gradient-blue {
+    background: radial-gradient(120% 120% at 30% 30%, #2563eb 0%, #1d4ed8 60%, #0b72ff 100%);
+  }
+  .bg-gradient-gold {
+    background: radial-gradient(120% 120% at 30% 30%, #f59e0b 0%, #d97706 60%, #ffcd45 100%);
+  }
+  .bg-gradient-red {
+    background: radial-gradient(120% 120% at 30% 30%, #dc2626 0%, #b91c1c 60%, #ff5d5d 100%);
+  }
+  .bg-gradient-slate {
+    background: radial-gradient(120% 120% at 30% 30%, #64748b 0%, #475569 60%, #334155 100%);
+  }
+}

@@ -1,9 +1,9 @@
 <template>
   <div class="w-72 bg-white border-r border-gray-200 flex flex-col h-full">
     <!-- Brand Header (centered logo only) -->
-    <div class="p-4 border-b border-gray-200 bg-white z-10">
+    <div class="flex items-center justify-center p-4 border-b border-gray-200 bg-white z-10">
       <RouterLink to="/" aria-label="Go to homepage" class="block">
-        <img src="/assets/machinery-genius.png" alt="Machinery Genius Logo" class="h-20 w-auto" loading="lazy" />
+        <img src="/assets/images/logo.png" alt="Machinery Genius Logo" class="h-20 w-auto" loading="lazy" />
       </RouterLink>
     </div>
 

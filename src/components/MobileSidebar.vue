@@ -1,9 +1,11 @@
 <template>
     <aside class="w-80 bg-white border-r border-gray-200 flex flex-col h-full">
 
-        <!-- Brand Header -->
-        <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-20 flex items-center justify-between">
-            <span class="text-blue-600 font-bold text-lg">Machinery Genius</span>
+        <!-- Brand Header (centered logo only) -->
+        <div class="flex items-center justify-center p-4 border-b border-gray-200 bg-white z-10">
+            <RouterLink to="/" aria-label="Go to homepage" class="block">
+                <img src="/assets/images/logo.png" alt="Machinery Genius Logo" class="h-20 w-auto" loading="lazy" />
+            </RouterLink>
         </div>
 
         <!-- New Chat (sticky) -->

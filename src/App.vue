@@ -3,13 +3,13 @@
     <!-- <FullScreenLoader /> -->
 
     <!-- Sidebar (desktop only) -->
-    <Sidebar class="hidden lg:flex border-r border-gray-200" />
+    <Sidebar class="hidden xl:flex border-r border-gray-200" />
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col relative">
 
       <!-- Mobile topbar with toggles -->
-      <div class="flex items-center justify-between px-3 py-2 border-b border-gray-200 lg:hidden">
+      <div class="flex items-center justify-between px-3 py-2 border-b border-gray-200 xl:hidden">
         <button @click="showSidebar = true" class="p-2 border border-gray-300 rounded-md">
           <!-- Sidebar icon -->
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none" viewBox="0 0 24 24"
@@ -31,21 +31,21 @@
       </div>
 
       <!-- Routed Content -->
-      <RouterView class="flex-1 overflow-y-auto" />
+      <RouterView class="flex-none lg:flex-1 overflow-y-visible lg:overflow-y-auto" />
     </div>
 
     <!-- Aside Menu (desktop only) -->
-    <AsideMenu class="hidden lg:flex border-l border-gray-200" />
+    <AsideMenu class="hidden xl:flex border-l border-gray-200" />
 
     <!-- 🔹 Common Overlay -->
     <transition name="fade">
-      <div v-if="showSidebar || showAside" class="fixed inset-0 bg-black/60 z-40 lg:hidden" @click="closeAll"></div>
+      <div v-if="showSidebar || showAside" class="fixed inset-0 bg-black/60 z-40 xl:hidden" @click="closeAll"></div>
     </transition>
 
     <!-- Mobile Sidebar Drawer (slide from left) -->
     <transition name="slide-left">
       <div v-if="showSidebar"
-        class="fixed left-0 top-0 w-72 h-full bg-white border-r border-gray-200 z-50 flex flex-col lg:hidden">
+        class="fixed left-0 top-0 w-72 h-full bg-white border-r border-gray-200 z-50 flex flex-col xl:hidden">
         <!-- Close button absolute -->
         <button @click="showSidebar = false"
           class="absolute top-3 -right-5 z-99 px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:text-gray-900">

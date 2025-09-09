@@ -23,9 +23,13 @@
                     Feedback
                 </RouterLink>
 
-                <RouterLink :to="{ name: 'oem-partners' }" class="px-3 py-2 rounded-md transition"
+                <!-- Option 3: Vertical layout for narrow sidebar -->
+                <RouterLink :to="{ name: 'oem-partners' }"
+                    class="px-3 py-2 rounded-md transition flex flex-col items-start gap-1 text-center"
                     active-class="bg-blue-100 text-blue-700">
-                    OEM Manufactures
+                    <img src="/assets/images/acra.png" alt="Machinery Genius Logo" class="h-8 w-auto max-w-full"
+                        loading="lazy" />
+                    <span class="text-xs">OEM Manufactures</span>
                 </RouterLink>
 
                 <RouterLink :to="{ name: 'oem-supplier-form' }" class="px-3 py-2 rounded-md transition"
