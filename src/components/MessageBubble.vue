@@ -18,10 +18,10 @@
 
         <template #followups>
           <!-- related models chips -->
-          <RelatedModels :models="message.related_models" @selectModel="handleModelSelect" />
+          <RelatedModels :models="message.related_models" />
 
           <!-- show need_more_context hint and followups -->
-          <FollowUpGroup :questions="message.followup_questions" @sendFollowup="handleFollowup" />
+          <FollowUpGroup :questions="message.followup_questions" />
         </template>
       </Bubble>
     </div>
@@ -36,18 +36,10 @@ import AdviceList from '@/components/partials/bubble/AdviceList.vue'
 import FollowUpGroup from '@/components/partials/bubble/FollowUpGroup.vue'
 import RelatedModels from '@/components/partials/bubble/RelatedModels.vue'
 
-const emits = defineEmits(['sendFollowup', 'sendMessage', 'fillContext'])
 const props = defineProps({
   message: { type: Object, required: true },
   isUser: { type: Boolean, default: false }
 })
-
-function handleFollowup(q) { emits('sendFollowup', q) }
-
-function handleModelSelect(model) {
-  emits('sendFollowup', model)
-  emits('fillContext', { field: 'model', value: model })
-}
 </script>
 
 <style scoped>

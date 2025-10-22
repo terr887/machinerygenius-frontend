@@ -7,7 +7,8 @@ import PrivacyPolicyView from '@/views/PrivacyPolicyView.vue'
 import AboutView from '@/views/AboutView.vue'
 import ContactView from '@/views/ContactView.vue'
 import FeedbackView from '@/views/FeedbackView.vue'
-import SupplierListing from '@/views/OemSupplier/SupplierListing.vue'
+import Acra from '@/views/OemSupplier/Acra.vue'
+import Paramigiani from '@/views/OemSupplier/Paramigiani.vue'
 import SingUpForm from '@/views/OemSupplier/SingUpForm.vue'
 
 const router = createRouter({
@@ -39,9 +40,19 @@ const router = createRouter({
       component: FeedbackView,
     },
     {
+      path: '/oem-partners/acra',
+      name: 'oem-partners-acra',
+      component: Acra,
+    },
+    {
+      path: '/oem-partners/paramigiani',
+      name: 'oem-partners-paramigiani',
+      component: Paramigiani,
+    },
+    {
       path: '/oem-partners',
       name: 'oem-partners',
-      component: SupplierListing,
+      component: Acra,
     },
     {
       path: '/oem-supplier-form',

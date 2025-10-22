@@ -47,7 +47,7 @@
                         Feedback
                     </RouterLink>
 
-                    <RouterLink :to="{ name: 'oem-partners' }" class="px-3 py-2 rounded-md transition"
+                    <RouterLink :to="{ name: 'oem-partners-acra' }" class="px-3 py-2 rounded-md transition"
                         active-class="bg-blue-100 text-blue-700">
                         OEM Manufactures
                     </RouterLink>

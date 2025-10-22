@@ -23,14 +23,24 @@
                     Feedback
                 </RouterLink>
 
-                <!-- Option 3: Vertical layout for narrow sidebar -->
-                <RouterLink :to="{ name: 'oem-partners' }"
-                    class="px-3 py-2 rounded-md transition flex flex-col items-start gap-1 text-center"
-                    active-class="bg-blue-100 text-blue-700">
-                    <img src="/assets/images/acra.png" alt="Machinery Genius Logo" class="h-8 w-auto max-w-full"
-                        loading="lazy" />
-                    <span class="text-xs">OEM Manufactures</span>
-                </RouterLink>
+                <div class="px-3 flex flex-col items-left gap-2">
+                    <!-- logos row -->
+                    <div class="flex items-center justify-left gap-3">
+                        <RouterLink :to="{ name: 'oem-partners-acra' }" class="transition hover:opacity-80"
+                            active-class="opacity-100">
+                            <img src="/assets/images/acra.png" alt="Acra Logo" class="h-8 w-auto" loading="lazy" />
+                        </RouterLink>
+
+                        <RouterLink :to="{ name: 'oem-partners-paramigiani' }" class="transition hover:opacity-80"
+                            active-class="opacity-100">
+                            <img src="/assets/images/paramigiani.png" alt="Paramigiani Logo" class="h-8 w-auto"
+                                loading="lazy" />
+                        </RouterLink>
+                    </div>
+
+                    <!-- single text below both -->
+                    <span class="text-xs text-gray-600">OEM Manufactures</span>
+                </div>
 
                 <RouterLink :to="{ name: 'oem-supplier-form' }" class="px-3 py-2 rounded-md transition"
                     active-class="bg-blue-100 text-blue-700">

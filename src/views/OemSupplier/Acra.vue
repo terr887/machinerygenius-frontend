@@ -57,9 +57,9 @@
         <section class="py-4">
             <div class="marquee" :aria-label="ariaLabel">
                 <div class="marquee-track" ref="track">
-                    <template v-for="(item, idx) in duplicatedImages" :key="`m-${idx}-${item.src}`">
-                        <img :src="item.src" :alt="item.alt || item.name || 'machine'" loading="lazy"
-                            @error="handleError($event, idx)" class="mx-4 max-h-20 object-contain" />
+                    <template v-for="num in 19" :key="num">
+                        <img :src="`/assets/images/acra/${1000 + num}.png`" :alt="`Machine ${1000 + num}`"
+                            loading="lazy" class="mx-4 max-h-20 object-contain" @error="handleError($event, num)" />
                     </template>
                 </div>
             </div>
@@ -363,16 +363,6 @@
 import { ref, computed } from 'vue'
 
 const props = defineProps({
-    images: {
-        type: Array,
-        default: () => [
-            { src: 'flow-waterjet.webp', alt: 'Flow Waterjet' },
-            { src: 'cincinnati-press-brake.webp', alt: 'Cincinnati Press Brake' },
-            { src: 'doall-horizontal-bandsaw.webp', alt: 'DoALL Bandsaw' },
-            { src: 'knuth-drill-press.webp', alt: 'Knuth Drill Press' },
-            { src: 'bridgeport-vertical-milling-machine.webp', alt: 'Bridgeport Vertical Milling Machine' }
-        ]
-    },
     ariaLabel: {
         type: String,
         default: 'Representative machines / manufacturers'
@@ -384,16 +374,13 @@ const props = defineProps({
     }
 })
 
-const duplicatedImages = computed(() => [...props.images, ...props.images])
 const track = ref(null)
 
 function handleError(event, idx) {
     const img = event.target
     if (!img) return
     img.onerror = null
-    img.src = props.fallbackSrc
-    img.setAttribute('aria-hidden', 'true')
-    img.classList.add('opacity-60')
+    img.src = img.src.replace('.png', '.jpg')
 }
 </script>
 

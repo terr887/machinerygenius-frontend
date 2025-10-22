@@ -18,8 +18,7 @@
     <div ref="messagesContainer" class="flex-1 overflow-y-auto px-3 py-4 sm:px-6 sm:py-6" @scroll="onScroll">
       <!-- mobile-first: full width; increase max width on sm/md/lg -->
       <div class="mx-auto w-full max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl space-y-4 sm:space-y-6">
-        <MessageBubble v-for="msg in messages" :key="msg.id" :message="msg" :isUser="msg.isUser"
-          @sendFollowup="handleFollowup" @fillContext="handleFillContext" />
+        <MessageBubble v-for="msg in messages" :key="msg.id" :message="msg" :isUser="msg.isUser" />
 
 
         <!-- WhatsApp-style typing dots (compact on mobile) -->
@@ -167,15 +166,6 @@ const handleSendMessage = async (message) => {
   await tryAutoScrollOnNewMessage() // if user was at bottom, will scroll now (because message was added)
   await sendToAI(message.text)
   scrollToBottom()
-}
-
-const handleFollowup = async (followup) => {
-  inputMessage.value = followup
-  // await handleSendMessage({ text: followup })
-}
-
-const handleFillContext = async (payload) => {
-  console.log(payload);
 }
 
 // SCROLL HANDLING
