@@ -5,6 +5,8 @@ import HomeView from '@/views/HomeView.vue'
 import ChatSession from '@/views/ChatSession.vue'
 import PrivacyPolicyView from '@/views/PrivacyPolicyView.vue'
 import AboutView from '@/views/AboutView.vue'
+import FeaturesView from '@/views/FeaturesView.vue'
+import LathesView from '@/views/LathesView.vue'
 import ContactView from '@/views/ContactView.vue'
 import FeedbackView from '@/views/FeedbackView.vue'
 import Acra from '@/views/OemSupplier/Acra.vue'
@@ -23,6 +25,16 @@ const router = createRouter({
       path: '/c/:session',
       name: 'chat-session',
       component: ChatSession,
+    },
+    {
+      path: '/features',
+      name: 'feature',
+      component: FeaturesView,
+    },
+    {
+      path: '/lathes',
+      name: 'lathes',
+      component: LathesView,
     },
     {
       path: '/about',

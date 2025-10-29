@@ -7,6 +7,14 @@
                 <RouterLink to="/" class="px-3 py-2 rounded-md transition" active-class="bg-blue-100 text-blue-700">
                     Home
                 </RouterLink>
+                <RouterLink to="/features" class="px-3 py-2 rounded-md transition"
+                    active-class="bg-blue-100 text-blue-700">
+                    Features
+                </RouterLink>
+                 <RouterLink to="/lathes" class="px-3 py-2 rounded-md transition"
+                    active-class="bg-blue-100 text-blue-700">
+                    Lathes
+                </RouterLink>
 
                 <RouterLink to="/about" class="px-3 py-2 rounded-md transition"
                     active-class="bg-blue-100 text-blue-700">
