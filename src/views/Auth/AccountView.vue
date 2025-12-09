@@ -44,28 +44,6 @@
                 <p class="text-base font-medium text-gray-900">{{ authStore.user?.company_name || authStore.user?.company || 'Not provided' }}</p>
               </div>
             </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm text-gray-500">Role</p>
-                <p class="text-base font-medium text-gray-900">{{ authStore.user?.role || 'Member' }}</p>
-              </div>
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm text-gray-500">Status</p>
-                <p class="text-base font-medium text-gray-900">
-                  <span :class="authStore.user?.enabled ? 'text-emerald-600' : 'text-red-600'">
-                    {{ authStore.user?.enabled ? 'Enabled' : 'Pending' }}
-                  </span>
-                </p>
-              </div>
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm text-gray-500">Joined</p>
-                <p class="text-base font-medium text-gray-900">{{ joinedDate || '–' }}</p>
-              </div>
-            </div>
           </div>
         </div>
 
