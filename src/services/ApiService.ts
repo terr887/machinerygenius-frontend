@@ -1,61 +1,49 @@
-import { useUIStore } from '@/stores/ui'
 import axios from 'axios'
 
-const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
+// Keep a tiny helper so we do not create a Pinia dependency in this module.
+const getStoredToken = () => localStorage.getItem('mg_token')
+
+const rawBaseUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, '') || 'http://127.0.0.1:8000'
+const apiBaseUrl = rawBaseUrl.endsWith('/api') ? rawBaseUrl : `${rawBaseUrl}/api`
+
+export const apiClient = axios.create({
+    baseURL: apiBaseUrl,
     headers: {
         'Content-Type': 'application/json'
     }
 })
 
-// api.interceptors.request.use(
-//     (config) => {
-//         const uiStore = useUIStore()
-//         uiStore.setLoading(true)
-//         return config
-//     },
-//     (error) => {
-//         const uiStore = useUIStore()
-//         uiStore.setLoading(false)
-//         return Promise.reject(error)
-//     }
-// )
-
-// api.interceptors.response.use(
-//     (response) => {
-//         const uiStore = useUIStore()
-//         uiStore.setLoading(false)
-//         return response
-//     },
-//     (error) => {
-//         const uiStore = useUIStore()
-//         uiStore.setLoading(false)
-//         return Promise.reject(error)
-//     }
-// )
+apiClient.interceptors.request.use((config) => {
+    const token = getStoredToken()
+    if (token) {
+        config.headers = config.headers || {}
+        config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+})
 
 export default {
     createChat: (message: string) => {
         const formData = new URLSearchParams()
         formData.append('question', message)
 
-        return api.post(`/chat/new`, formData, {
+        return apiClient.post(`/chat/new`, formData, {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         })
     },
 
-    getChats: () => api.get('/chats'),
+    getChats: () => apiClient.get('/chats'),
 
     askInSession: (sessionId: string, message: string) => {
         const formData = new URLSearchParams()
         formData.append('question', message)
 
-        return api.post(`/chat/${sessionId}/ask`, formData, {
+        return apiClient.post(`/chat/${sessionId}/ask`, formData, {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         })
     },
 
 
     getChatHistory: (sessionId: any) =>
-        api.get(`/chat/${sessionId}/history`)
+        apiClient.get(`/chat/${sessionId}/history`)
 }

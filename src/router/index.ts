@@ -12,6 +12,13 @@ import FeedbackView from '@/views/FeedbackView.vue'
 import Acra from '@/views/OemSupplier/Acra.vue'
 import Paramigiani from '@/views/OemSupplier/Paramigiani.vue'
 import SingUpForm from '@/views/OemSupplier/SingUpForm.vue'
+import LoginView from '@/views/Auth/LoginView.vue'
+import RegisterView from '@/views/Auth/RegisterView.vue'
+import ForgotPasswordView from '@/views/Auth/ForgotPasswordView.vue'
+import AccountView from '@/views/Auth/AccountView.vue'
+import ChangePasswordView from '@/views/Auth/ChangePasswordView.vue'
+import EmailVerificationView from '@/views/Auth/EmailVerificationView.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -72,11 +79,67 @@ const router = createRouter({
       component: SingUpForm,
     },
     {
+      path: '/login',
+      name: 'login',
+      component: LoginView,
+      meta: { guestOnly: true, hideSidebar: true, popup: true }
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterView,
+      meta: { guestOnly: true, hideSidebar: true, popup: true }
+    },
+    {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: ForgotPasswordView,
+      meta: { guestOnly: true, popup: true }
+    },
+    {
+      path: '/activate-account',
+      name: 'activate-account',
+      component: EmailVerificationView,
+      meta: { guestOnly: true, popup: true }
+    },
+    {
+      path: '/email/verify/:userId?/:hash?',
+      name: 'email-verify-link',
+      component: EmailVerificationView,
+      meta: { guestOnly: true, popup: true }
+    },
+    {
+      path: '/account',
+      name: 'account',
+      component: AccountView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/change-password',
+      name: 'change-password',
+      component: ChangePasswordView,
+      meta: { requiresAuth: true, popup: true }
+    },
+    {
       path: '/privacy-policy',
       name: 'privacy-policy',
       component: PrivacyPolicyView,
     }
   ],
+})
+
+router.beforeEach((to, _from, next) => {
+  const authStore = useAuthStore()
+
+  if (to.meta?.requiresAuth && !authStore.isAuthenticated) {
+    return next({ name: 'login', query: { redirect: to.fullPath } })
+  }
+
+  if (to.meta?.guestOnly && authStore.isAuthenticated) {
+    return next({ name: 'account' })
+  }
+
+  return next()
 })
 
 export default router

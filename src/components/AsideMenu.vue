@@ -31,6 +31,26 @@
                     Feedback
                 </RouterLink>
 
+                <RouterLink v-if="!isAuthed" to="/login" class="px-3 py-2 rounded-md transition"
+                    active-class="bg-blue-100 text-blue-700">
+                    Login
+                </RouterLink>
+
+                <RouterLink v-if="!isAuthed" to="/register" class="px-3 py-2 rounded-md transition"
+                    active-class="bg-blue-100 text-blue-700">
+                    Register
+                </RouterLink>
+
+                <RouterLink v-else to="/account" class="px-3 py-2 rounded-md transition"
+                    active-class="bg-blue-100 text-blue-700">
+                    My Account
+                </RouterLink>
+
+                <RouterLink v-if="isAuthed" to="/change-password" class="px-3 py-2 rounded-md transition"
+                    active-class="bg-blue-100 text-blue-700">
+                    Change Password
+                </RouterLink>
+
                 <div class="px-3 flex flex-col items-left gap-2">
                     <!-- logos row -->
                     <div class="flex items-center justify-left gap-3">
@@ -93,7 +113,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import { useAuthStore } from "@/stores/auth";
 
 const garage = ref([
     "AI Help",
@@ -104,4 +125,7 @@ const garage = ref([
     "3D Parts",
     "Training & Setup",
 ]);
+
+const authStore = useAuthStore()
+const isAuthed = computed(() => authStore.isAuthenticated)
 </script>
