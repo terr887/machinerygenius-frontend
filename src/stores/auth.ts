@@ -35,10 +35,31 @@ const resolveErrorMessage = (error: any, fallback: string) => {
     return fallback
 }
 
+const TOKEN_STORAGE_KEY = 'mg_token'
+const USER_STORAGE_KEY = 'mg_user'
+
+const loadStoredUser = (): AuthUser | null => {
+    const raw = localStorage.getItem(USER_STORAGE_KEY)
+    if (!raw) return null
+    try {
+        return JSON.parse(raw)
+    } catch {
+        return null
+    }
+}
+
+const persistUser = (user: AuthUser | null) => {
+    if (user) {
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user))
+    } else {
+        localStorage.removeItem(USER_STORAGE_KEY)
+    }
+}
+
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        token: localStorage.getItem('mg_token') || '',
-        user: null as AuthUser | null,
+        token: localStorage.getItem(TOKEN_STORAGE_KEY) || '',
+        user: loadStoredUser(),
         loading: false,
         error: '' as string | null
     }),
@@ -57,12 +78,14 @@ export const useAuthStore = defineStore('auth', {
         setAuth(token: string, user: AuthUser) {
             this.token = token
             this.user = user
-            localStorage.setItem('mg_token', token)
+            localStorage.setItem(TOKEN_STORAGE_KEY, token)
+            persistUser(user)
         },
         clearAuth() {
             this.token = ''
             this.user = null
-            localStorage.removeItem('mg_token')
+            localStorage.removeItem(TOKEN_STORAGE_KEY)
+            persistUser(null)
         },
         async login(credentials: AuthCredentials) {
             this.loading = true
@@ -104,6 +127,9 @@ export const useAuthStore = defineStore('auth', {
             try {
                 const { data } = await AuthService.getProfile()
                 this.user = data?.user || data
+                if (this.user) {
+                    persistUser(this.user)
+                }
                 return data
             } catch (error: any) {
                 this.error = resolveErrorMessage(error, 'Unable to load profile.')
