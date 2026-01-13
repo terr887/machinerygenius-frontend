@@ -3,14 +3,14 @@
     <!-- <FullScreenLoader /> -->
 
     <!-- Sidebar (desktop only) -->
-    <Sidebar v-if="showNavigation" class="hidden xl:flex border-r border-gray-200" />
+    <Sidebar v-if="showLeftSidebar" class="hidden xl:flex border-r border-gray-200" />
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col relative">
 
       <!-- Mobile topbar with toggles -->
       <div v-if="showNavigation" class="flex items-center justify-between px-3 py-2 border-b border-gray-200 xl:hidden">
-        <button @click="showSidebar = true" class="p-2 border border-gray-300 rounded-md">
+        <button v-if="showLeftSidebar" @click="showSidebar = true" class="p-2 border border-gray-300 rounded-md">
           <!-- Sidebar icon -->
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none" viewBox="0 0 24 24"
             stroke="currentColor">
@@ -18,6 +18,7 @@
               d="M3.75 5.25h16.5m-16.5 6.75h16.5m-16.5 6.75h16.5" />
           </svg>
         </button>
+        <span v-else class="w-10" aria-hidden="true"></span>
 
         <span class="font-semibold text-gray-700">Machinery Genius</span>
 
@@ -65,7 +66,7 @@
 
     <!-- Mobile Sidebar Drawer (slide from left) -->
     <transition name="slide-left">
-      <div v-if="showNavigation && showSidebar"
+      <div v-if="showLeftSidebar && showSidebar"
         class="fixed left-0 top-0 w-72 h-full bg-white border-r border-gray-200 z-50 flex flex-col xl:hidden">
         <!-- Close button absolute -->
         <button @click="showSidebar = false"
@@ -92,6 +93,7 @@ const showSidebar = ref(false)
 const showAside = ref(false)
 const route = useRoute()
 const showNavigation = computed(() => !route.meta?.hideSidebar && !route.meta?.popup)
+const showLeftSidebar = computed(() => showNavigation.value && route.meta?.requiresAuth)
 const isPopup = computed(() => Boolean(route.meta?.popup))
 const backgroundView = shallowRef<{ Component: any, route: any } | null>(null)
 const backgroundComponent = computed(() => backgroundView.value?.Component || HomeView)
@@ -101,6 +103,9 @@ const backgroundKey = computed(() => backgroundView.value?.route.fullPath || 'po
 watch(
   () => route.fullPath,
   () => {
+    if (!showLeftSidebar.value) {
+      showSidebar.value = false
+    }
     if (!route.meta?.popup) {
       backgroundView.value = {
         Component: route.matched[route.matched.length - 1]?.components?.default,
