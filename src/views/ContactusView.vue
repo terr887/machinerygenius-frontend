@@ -1,5 +1,5 @@
 <template>
- <div style="max-width:1100px;margin:0 auto;padding:26px 16px;">
+   <div style="max-width:1100px;margin:0 auto;padding:26px 16px;">
 
     <!-- HERO -->
     <section class="mg-hero">
@@ -186,7 +186,7 @@
   </div>
 </template>
 <script>
-   // Chip-to-topic helper (no dependencies)
+  // Chip-to-topic helper (no dependencies)
     (function () {
       const chips = document.querySelectorAll(".mg-chip");
       const topic = document.getElementById("topic");
@@ -220,7 +220,7 @@
     })();
 </script>
 <style scoped>
-    /* Minimal, scoped helpers (per MG build rules) */
+ /* Minimal, scoped helpers (per MG build rules) */
     .mg-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:20px; }
     .mg-hero {
       background: linear-gradient(135deg, rgba(37,99,235,0.10), rgba(245,158,11,0.08));

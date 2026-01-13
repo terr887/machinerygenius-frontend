@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 // Views
-import HomeView from '@/views/HomeView.vue'
+import FeaturesLandingView from '@/views/FeaturesLandingView.vue'
 import ChatSession from '@/views/ChatSession.vue'
 import PrivacyPolicyView from '@/views/PrivacyPolicyView.vue'
 import AboutView from '@/views/AboutView.vue'
@@ -26,7 +26,8 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: FeaturesLandingView,
+      meta: { hideLeftSidebar: true },
     },
     {
       path: '/c/:session',
