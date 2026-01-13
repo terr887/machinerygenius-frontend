@@ -128,10 +128,29 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { reactive, ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 /* --- form state --- */
+const router = useRouter();
+const apiBaseUrl = (import.meta.env.VITE_API_URL?.replace(/\/$/, '') || 'http://127.0.0.1:8000');
+const contactEndpoint = apiBaseUrl.endsWith('/api') ? `${apiBaseUrl}/contact` : `${apiBaseUrl}/api/contact`;
+
+interface ContactFormPayload {
+  name: string;
+  email: string;
+  subject?: string;
+  message: string;
+  consent: boolean;
+  source_page: string;
+}
+
+interface ContactResponse {
+  status?: string | boolean;
+  message?: string;
+}
+
 const form = reactive({
   name: '',
   email: '',
@@ -149,6 +168,9 @@ const errors = reactive({
 const sending = ref(false);
 const statusMessage = ref('');
 const statusType = ref(''); // 'success' | 'error'
+
+const DEFAULT_SUCCESS_MESSAGE = 'Thank you for your message! We\'ll get back to you within 1 business day.';
+const DEFAULT_ERROR_MESSAGE = 'Sorry, we couldn\'t send your message. Please try again.';
 
 /* --- validation helpers --- */
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -174,31 +196,57 @@ async function submit() {
   sending.value = true;
 
   try {
-    // Replace with your actual API endpoint
-    const res = await fetch('/api/contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
+    const payload: ContactFormPayload = {
+      name: form.name,
+      email: form.email,
+      subject: form.subject,
+      message: form.message,
+      consent: form.consent,
+      source_page: 'contact'
+    };
+
+    const body = new URLSearchParams();
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value === undefined || value === null) return;
+      body.append(key, String(value));
     });
 
-    if (!res.ok) {
-      const payload = await res.json().catch(() => ({}));
-      throw new Error(payload.message || `Server responded with ${res.status}`);
+    const response = await fetch(contactEndpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body,
+    });
+
+    let data: ContactResponse | undefined;
+    try {
+      data = await response.json();
+    } catch (error) {
+      // Some backends respond with empty bodies; ignore JSON parse errors.
     }
 
-    // success
-    statusMessage.value = 'Thank you for your message! We\'ll get back to you within 1 business day.';
-    statusType.value = 'success';
+    if (!response.ok) {
+      throw new Error(data?.message || `Server responded with ${response.status}`);
+    }
 
-    // reset form
-    form.name = '';
-    form.email = '';
-    form.subject = '';
-    form.message = '';
-    form.consent = true;
-  } catch (err) {
-    console.error(err);
-    statusMessage.value = `Sorry, we couldn't send your message: ${err.message || 'Unknown error'}`;
+    const responseStatus = data?.status === 'error' || data?.status === false ? 'error' : 'success';
+    const responseMessage = data?.message?.trim();
+
+    statusType.value = responseStatus;
+    const finalMessage = responseMessage || (responseStatus === 'success' ? DEFAULT_SUCCESS_MESSAGE : DEFAULT_ERROR_MESSAGE);
+    statusMessage.value = finalMessage;
+
+    if (responseStatus === 'success') {
+      form.name = '';
+      form.email = '';
+      form.subject = '';
+      form.message = '';
+      form.consent = true;
+      await router.push({ name: 'thank-you', query: { message: finalMessage } });
+    }
+  } catch (error) {
+    console.error(error);
+    const message = error instanceof Error ? error.message : '';
+    statusMessage.value = message ? `Sorry, we couldn't send your message: ${message}` : DEFAULT_ERROR_MESSAGE;
     statusType.value = 'error';
   } finally {
     sending.value = false;

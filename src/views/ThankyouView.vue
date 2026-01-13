@@ -3,15 +3,19 @@
 
     <!-- HERO -->
     <section class="mg-hero">
-      <div class="mg-badge"><span aria-hidden="true">ƒo.</span><span>Message received</span></div>
+      <div class="mg-badge"><span aria-hidden="true">✅</span><span>Message received</span></div>
       <h1 style="font-size:40px;line-height:1.05;letter-spacing:-0.03em;margin:14px 0 10px 0;">
         Thank you for contacting Machinery Genius
       </h1>
       <p style="font-size:16px;color:#374151;margin:0;max-width:920px;">
-        Weƒ?Tve got your message and weƒ?Tll route it to the right team. In the meantime, many users can get
-        quick answers instantly inside Machinery Geniusƒ?"especially for common questions like specs, weights,
+        We’ve got your message and we’ll route it to the right team. In the meantime, many users can get
+        quick answers instantly inside Machinery Genius—especially for common questions like specs, weights,
         power, oil types, tooling, and model comparisons.
       </p>
+
+      <div class="mg-note" style="margin-top:16px;" role="status">
+        {{ successMessage }}
+      </div>
 
       <div class="mg-cta-row" style="margin-top:16px;">
         <a class="mg-btn-primary" href="/app">Ask a Question Now</a>
@@ -20,7 +24,7 @@
       </div>
 
       <div class="mg-small" style="margin-top:10px;">
-        If youƒ?Tre reading this at 2:00 AM with a machine downƒ?Ý we respect the grind.
+        If you’re reading this at 2:00 AM with a machine down… we respect the grind.
       </div>
     </section>
 
@@ -32,7 +36,7 @@
           <h2 class="mg-section-title">Need a quick answer right now?</h2>
 
           <div class="mg-note">
-            <strong>If your chat isnƒ?Tt working</strong>, you may be out of free questions or tokens.
+            <strong>If your chat isn’t working</strong>, you may be out of free questions or tokens.
             Free accounts include <strong>20 lifetime questions</strong>. Token packs keep you moving when you need answers fast.
           </div>
 
@@ -40,11 +44,11 @@
 
           <h3 style="margin:0 0 8px 0;font-size:16px;font-weight:900;">Try these common question types</h3>
           <ul class="mg-list">
-            <li>ƒ?oWhat oil does my machine take?ƒ??</li>
-            <li>ƒ?oHow much does it weigh and what are the dimensions?ƒ??</li>
-            <li>ƒ?oWhat power/voltage/phase do I need?ƒ??</li>
-            <li>ƒ?oWhatƒ?Ts the difference between Model A and Model B?ƒ??</li>
-            <li>ƒ?oWhat tooling does this spindle/taper use?ƒ??</li>
+            <li>“What oil does my machine take?”</li>
+            <li>“How much does it weigh and what are the dimensions?”</li>
+            <li>“What power/voltage/phase do I need?”</li>
+            <li>“What’s the difference between Model A and Model B?”</li>
+            <li>“What tooling does this spindle/taper use?”</li>
           </ul>
 
           <div class="mg-divider"></div>
@@ -63,7 +67,7 @@
         <aside class="mg-card">
           <h2 class="mg-section-title">Tokens & Pricing (quick view)</h2>
           <p class="mg-muted" style="margin:0;">
-            Tokens donƒ?Tt expire. Perfect for emergency use or occasional questions.
+            Tokens don’t expire. Perfect for emergency use or occasional questions.
           </p>
 
           <div class="mg-divider"></div>
@@ -88,7 +92,7 @@
 
           <div class="mg-divider"></div>
 
-          <h3 style="margin:0 0 8px 0;font-size:16px;font-weight:900;">Machine Garageƒ,› Pro</h3>
+          <h3 style="margin:0 0 8px 0;font-size:16px;font-weight:900;">Machine Garage™ Pro</h3>
           <div class="mg-price">$79<span style="font-size:14px;font-weight:800;">/mo</span></div>
           <p class="mg-small" style="margin:8px 0 0 0;">
             Best for ongoing use: save machines, save chats to machines, uploads, reminders, and long-term machine memory.
@@ -137,11 +141,11 @@
 
           <div class="k">Next steps</div>
           <div class="v">
-            <a href="/app" style="text-decoration:none;color:#2563eb;">Ask a question ƒ+'</a>
-            &nbsp;ƒ?›&nbsp;
-            <a href="/pricing" style="text-decoration:none;color:#2563eb;">View pricing ƒ+'</a>
-            &nbsp;ƒ?›&nbsp;
-            <a href="/help" style="text-decoration:none;color:#2563eb;">Get support ƒ+'</a>
+            <a href="/app" style="text-decoration:none;color:#2563eb;">Ask a question →</a>
+            &nbsp;•&nbsp;
+            <a href="/pricing" style="text-decoration:none;color:#2563eb;">View pricing →</a>
+            &nbsp;•&nbsp;
+            <a href="/help" style="text-decoration:none;color:#2563eb;">Get support →</a>
           </div>
         </div>
 
@@ -155,7 +159,20 @@
 
   </div>
 </template>
-<script>
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const DEFAULT_MESSAGE = 'Thanks for reaching out. We will get back to you shortly.';
+
+const successMessage = computed(() => {
+  const message = route.query.message;
+  if (Array.isArray(message)) {
+    return message[0] || DEFAULT_MESSAGE;
+  }
+  return (message as string | undefined)?.trim() || DEFAULT_MESSAGE;
+});
 </script>
 <style>
  /* Minimal, scoped helpers (per MG build rules) */

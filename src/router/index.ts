@@ -8,6 +8,7 @@ import AboutView from '@/views/AboutView.vue'
 import FeaturesView from '@/views/FeaturesView.vue'
 import LathesView from '@/views/LathesView.vue'
 import ContactView from '@/views/ContactView.vue'
+import ThankyouView from '@/views/ThankyouView.vue'
 import FeedbackView from '@/views/FeedbackView.vue'
 import Acra from '@/views/OemSupplier/Acra.vue'
 import Paramigiani from '@/views/OemSupplier/Paramigiani.vue'
@@ -53,6 +54,11 @@ const router = createRouter({
       path: '/contact',
       name: 'contact',
       component: ContactView,
+    },
+    {
+      path: '/thank-you',
+      name: 'thank-you',
+      component: ThankyouView,
     },
     {
       path: '/feedback',

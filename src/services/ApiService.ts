@@ -1,5 +1,19 @@
 import axios from 'axios'
 
+export interface ContactFormPayload {
+    name: string
+    email: string
+    subject?: string
+    message: string
+    consent: boolean
+    source_page?: string
+}
+
+export interface ContactResponse {
+    message?: string
+    status?: string
+}
+
 // Keep a tiny helper so we do not create a Pinia dependency in this module.
 const getStoredToken = () => localStorage.getItem('mg_token')
 
@@ -45,5 +59,8 @@ export default {
 
 
     getChatHistory: (sessionId: any) =>
-        apiClient.get(`/chat/${sessionId}/history`)
+        apiClient.get(`/chat/${sessionId}/history`),
+
+    submitContact: (payload: ContactFormPayload) =>
+        apiClient.post<ContactResponse>('/contact', payload)
 }
