@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 // Views
 import FeaturesLandingView from '@/views/FeaturesLandingView.vue'
 import ChatSession from '@/views/ChatSession.vue'
+import HomeView from '@/views/HomeView.vue'
 import PrivacyPolicyView from '@/views/PrivacyPolicyView.vue'
 import AboutView from '@/views/AboutView.vue'
 import FeaturesView from '@/views/FeaturesView.vue'
@@ -31,9 +32,16 @@ const router = createRouter({
       meta: { hideLeftSidebar: true },
     },
     {
+      path: '/app',
+      name: 'app',
+      component: HomeView,
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/c/:session',
       name: 'chat-session',
       component: ChatSession,
+      meta: { requiresAuth: true },
     },
     {
       path: '/features',

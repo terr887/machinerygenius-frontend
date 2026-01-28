@@ -9,7 +9,7 @@
 
     <!-- New Chat Button -->
     <div class="p-2 border-b border-gray-200 top-[48px] bg-white z-10">
-      <RouterLink to="/"
+      <RouterLink to="/app"
         class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 transition group">
         <div class="flex items-center gap-2">
           <!-- Plus icon -->

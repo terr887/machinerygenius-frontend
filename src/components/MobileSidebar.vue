@@ -10,7 +10,7 @@
 
         <!-- New Chat (sticky) -->
         <div class="p-2 border-b border-gray-200 sticky top-[64px] bg-white z-10">
-            <RouterLink to="/"
+            <RouterLink to="/app"
                 class="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100 transition"
                 aria-label="Start a new chat">
                 <!-- Plus icon -->
