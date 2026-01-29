@@ -6,7 +6,7 @@
     <Sidebar v-if="showLeftSidebar" class="hidden xl:flex border-r border-gray-200" />
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col relative">
+    <div class="flex-1 flex flex-col relative min-h-0">
 
       <!-- Mobile topbar with toggles -->
       <div v-if="showNavigation" class="flex items-center justify-between px-3 py-2 border-b border-gray-200 xl:hidden">
@@ -32,7 +32,7 @@
       </div>
 
       <!-- Routed Content -->
-      <div class="relative flex-1">
+      <div class="relative flex-1 min-h-0 overflow-y-auto">
         <RouterView v-slot="{ Component, route: viewRoute }">
           <template v-if="isPopup">
             <!-- Background: last non-popup view -->

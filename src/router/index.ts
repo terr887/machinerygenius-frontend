@@ -17,6 +17,7 @@ import SingUpForm from '@/views/OemSupplier/SingUpForm.vue'
 import LoginView from '@/views/Auth/LoginView.vue'
 import RegisterView from '@/views/Auth/RegisterView.vue'
 import ForgotPasswordView from '@/views/Auth/ForgotPasswordView.vue'
+import ResetPasswordView from '@/views/Auth/ResetPasswordView.vue'
 import AccountView from '@/views/Auth/AccountView.vue'
 import ChangePasswordView from '@/views/Auth/ChangePasswordView.vue'
 import EmailVerificationView from '@/views/Auth/EmailVerificationView.vue'
@@ -109,6 +110,12 @@ const router = createRouter({
       path: '/forgot-password',
       name: 'forgot-password',
       component: ForgotPasswordView,
+      meta: { guestOnly: true, popup: true }
+    },
+    {
+      path: '/reset-password',
+      name: 'reset-password',
+      component: ResetPasswordView,
       meta: { guestOnly: true, popup: true }
     },
     {
