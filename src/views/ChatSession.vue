@@ -1,6 +1,6 @@
 <template>
   <!-- make the page relative so absolute elements (scroll button) position correctly -->
-  <div class="relative flex-1 flex flex-col bg-gray-50">
+  <div ref="pageRef" class="chat-session w-full mx-auto relative flex-1 flex flex-col bg-gray-50 min-h-0 h-full">
     <!-- LOADING OVERLAY (shows while chat history loads) -->
     <div v-if="isLoading" class="absolute inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
       aria-hidden="false" role="status" aria-live="polite">
@@ -15,7 +15,8 @@
     </div>
 
     <!-- Chat Messages -->
-    <div ref="messagesContainer" class="flex-1 overflow-y-auto px-3 py-4 sm:px-6 sm:py-6" @scroll="onScroll">
+    <div ref="messagesContainer" class="messages-scroll flex-1 min-h-0 overflow-y-auto px-3 py-4 sm:px-6 sm:py-6"
+      @scroll="onScroll">
       <!-- mobile-first: full width; increase max width on sm/md/lg -->
       <div class="mx-auto w-full max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl space-y-4 sm:space-y-6">
         <MessageBubble v-for="msg in messages" :key="msg.id" :message="msg" :isUser="msg.isUser" />
@@ -40,29 +41,33 @@
       </button>
     </transition>
 
-    <!-- Disclaimer Section -->
-    <div class="border-t border-gray-200 bg-yellow-50">
-      <div
-        class="mx-auto w-full max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl px-3 py-2 text-[11px] sm:text-xs text-yellow-900 leading-snug">
-        <strong>Disclaimer:</strong>
-        All information provided through this service is for general informational purposes only and does not constitute
-        professional, legal, or technical advice. Users are solely responsible for evaluating and confirming the
-        accuracy, applicability, and safety of any guidance or instructions before use. Always follow manufacturer
-        documentation and applicable safety regulations. MachineryGenius.com and its affiliates disclaim any liability
-        for injuries, damages, or losses arising from the use of this platform. <strong>Use at your own risk.</strong>
+    <!-- Sticky Footer: Disclaimer + Chat Input -->
+    <div ref="footerRef" class="chat-footer">
+      <!-- Disclaimer Section -->
+      <div class="border-t border-gray-200 bg-yellow-50">
+        <div
+          class="mx-auto w-full max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl px-3 py-2 text-[11px] sm:text-xs text-yellow-900 leading-snug">
+          <strong>Disclaimer:</strong>
+          All information provided through this service is for general informational purposes only and does not
+          constitute professional, legal, or technical advice. Users are solely responsible for evaluating and
+          confirming the accuracy, applicability, and safety of any guidance or instructions before use. Always follow
+          manufacturer documentation and applicable safety regulations. MachineryGenius.com and its affiliates disclaim
+          any liability for injuries, damages, or losses arising from the use of this platform. <strong>Use at your own
+            risk.</strong>
+        </div>
       </div>
-    </div>
 
-    <!-- Chat Input -->
-    <div class="px-3 py-3 sm:px-4 sm:py-4 sm:pt-0 pt-0">
-      <ChatInput :allowFileUpload="false" :is-loading="isLoading" :auto-focus="true"
-        @send-message="handleSendMessage" :value="inputMessage" />
+      <!-- Chat Input -->
+      <div class="px-3 py-3 sm:px-4 sm:py-4 sm:pt-0 pt-0">
+        <ChatInput :allowFileUpload="false" :is-loading="isLoading" :auto-focus="true"
+          @send-message="handleSendMessage" :value="inputMessage" />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, watch, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, nextTick, watch, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { v4 as uuidv4 } from 'uuid'
 import { useUIStore } from '@/stores/ui'
@@ -81,6 +86,8 @@ const isTyping = computed(() => uiStore.isTyping)
 const isLoading = computed(() => uiStore.isLoading)
 const messages = ref([])
 const messagesContainer = ref(null)
+const pageRef = ref(null)
+const footerRef = ref(null)
 const isAtBottom = ref(true)      // whether container is scrolled near bottom
 const showScrollButton = ref(false) // derived UI - we show button only when user scrolled up
 
@@ -199,6 +206,14 @@ const handleScrollToBottom = () => {
   showScrollButton.value = false
 }
 
+let footerObserver = null
+const updateFooterHeight = () => {
+  const pageEl = pageRef.value
+  const footerEl = footerRef.value
+  if (!pageEl || !footerEl) return
+  pageEl.style.setProperty('--chat-footer-height', `${footerEl.offsetHeight}px`)
+}
+
 onMounted(async () => {
   const pendingQuestion = sessionStorage.getItem('pendingQuestion')
 
@@ -219,6 +234,13 @@ onMounted(async () => {
     isAtBottom.value = distanceFromBottom <= BOTTOM_THRESHOLD
     showScrollButton.value = !isAtBottom.value
   }
+
+  await nextTick()
+  updateFooterHeight()
+  if (footerRef.value && typeof ResizeObserver !== 'undefined') {
+    footerObserver = new ResizeObserver(() => updateFooterHeight())
+    footerObserver.observe(footerRef.value)
+  }
 })
 
 watch(() => route.params.session, async (newSessionId, oldSessionId) => {
@@ -227,9 +249,34 @@ watch(() => route.params.session, async (newSessionId, oldSessionId) => {
     await loadSession(newSessionId)
   }
 })
+
+onBeforeUnmount(() => {
+  if (footerObserver) {
+    footerObserver.disconnect()
+    footerObserver = null
+  }
+})
 </script>
 
 <style scoped>
+.chat-session {
+  --chat-footer-height: 140px;
+}
+
+.messages-scroll {
+  padding-bottom: calc(var(--chat-footer-height) + 12px);
+  scroll-padding-bottom: calc(var(--chat-footer-height) + 12px);
+}
+
+.chat-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 30;
+  background: rgba(249, 250, 251, 0.95);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 -10px 24px rgba(18, 20, 25, 0.06);
+}
+
 /* smaller dots for mobile, scale slightly on larger screens */
 .dot {
   width: 6px;
@@ -272,7 +319,7 @@ watch(() => route.params.session, async (newSessionId, oldSessionId) => {
 .scroll-to-bottom-btn {
   position: absolute;
   right: 12px;
-  bottom: 110px;
+  bottom: calc(var(--chat-footer-height) + 12px);
   /* keeps it above disclaimer+input; tweak if your input height changes */
   z-index: 40;
   width: 36px;

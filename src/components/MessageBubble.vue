@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-end mb-4 w-full" :class="{ 'flex-row-reverse': isUser }" role="article"
+  <div class="flex items-center mb-4 w-full" :class="{ 'flex-row-reverse': isUser }" role="article"
     :aria-label="isUser ? 'User message' : 'Assistant message'">
     <MessageAvatar :isUser="isUser" />
 

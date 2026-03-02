@@ -43,44 +43,44 @@
 
           <form class="space-y-4" @submit.prevent="handleSubmit">
             <div class="grid md:grid-cols-2 gap-4">
-              <div class="space-y-1">
-                <label class="text-sm font-medium text-gray-700">First name</label>
+              <div>
+                <label class="block text-xs font-bold text-gray-900 mb-1">First name</label>
                 <input v-model="form.firstName" type="text" required placeholder="Alex"
-                  class="w-full rounded-lg border border-gray-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-xs" />
+                  class="w-full px-3 py-2 text-sm border border-gray-300 hover:border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
               </div>
-              <div class="space-y-1">
-                <label class="text-sm font-medium text-gray-700">Last name</label>
+              <div>
+                <label class="block text-xs font-bold text-gray-900 mb-1">Last name</label>
                 <input v-model="form.lastName" type="text" required placeholder="Stone"
-                  class="w-full rounded-lg border border-gray-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-xs" />
+                  class="w-full px-3 py-2 text-sm border border-gray-300 hover:border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
               </div>
             </div>
 
-            <div class="space-y-1">
-              <label class="text-sm font-medium text-gray-700">Company (optional)</label>
+            <div>
+              <label class="block text-xs font-bold text-gray-900 mb-1">Company (optional)</label>
               <input v-model="form.companyName" type="text" placeholder="Acme Manufacturing"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-xs" />
+                class="w-full px-3 py-2 text-sm border border-gray-300 hover:border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
             </div>
 
-            <div class="space-y-1">
-              <label class="text-sm font-medium text-gray-700">Email</label>
+            <div>
+              <label class="block text-xs font-bold text-gray-900 mb-1">Email</label>
               <input v-model="form.email" type="email" required placeholder="you@company.com"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-xs" />
+                class="w-full px-3 py-2 text-sm border border-gray-300 hover:border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
             </div>
 
             <div class="grid md:grid-cols-2 gap-4">
-              <div class="space-y-1">
-                <label class="text-sm font-medium text-gray-700">Password</label>
+              <div>
+                <label class="block text-xs font-bold text-gray-900 mb-1">Password</label>
                 <input v-model="form.password" type="password" required placeholder="At least 8 characters"
-                  class="w-full rounded-lg border border-gray-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-xs" />
+                  class="w-full px-3 py-2 text-sm border border-gray-300 hover:border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
               </div>
-              <div class="space-y-1">
-                <label class="text-sm font-medium text-gray-700">Confirm password</label>
+              <div>
+                <label class="block text-xs font-bold text-gray-900 mb-1">Confirm password</label>
                 <input v-model="form.confirmPassword" type="password" required placeholder="Repeat password"
-                  class="w-full rounded-lg border border-gray-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-xs" />
+                  class="w-full px-3 py-2 text-sm border border-gray-300 hover:border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
               </div>
             </div>
 
-            <button type="submit" :disabled="authStore.loading" class="w-full inline-flex justify-center items-center gap-2 rounded-lg bg-indigo-600 text-white font-semibold py-3 shadow-md hover:bg-indigo-700 transition disabled:opacity-60 disabled:cursor-not-allowed">
+            <button type="submit" :disabled="authStore.loading" class="w-full px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition">
               <span v-if="authStore.loading">Creating account...</span>
               <span v-else>Register</span>
             </button>
