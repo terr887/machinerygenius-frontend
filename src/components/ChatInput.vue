@@ -16,38 +16,52 @@
         <input ref="inputBoxRef" v-model="inputMessage" @keydown="handleKeydown" @input="adjustHeight"
           :placeholder="placeholder" :disabled="disabled || isLoading" :class="[
             'w-full resize-none outline-none text-sm text-gray-700 placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200',
-            allowFileUpload ? 'pl-12 pr-20' : 'pl-5 pr-30',
+            allowFileUpload ? 'pl-12 pr-36' : 'pl-5 pr-36',
             'py-3 min-h-[48px] max-h-32 overflow-y-auto'
           ]" rows="2" />
 
-        <!-- Character Count -->
-        <div v-if="showCharCount && maxLength" :class="[
-          'absolute right-16 top-1/2 transform -translate-y-1/2 text-xs',
-          inputMessage.length > maxLength * 0.8 ? 'text-orange-500' : 'text-gray-400',
-          inputMessage.length >= maxLength ? 'text-red-500' : ''
-        ]">
-          {{ inputMessage.length }}/{{ maxLength }}
-        </div>
+        <!-- Right cluster: counter + safety + send -->
+        <div class="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-3">
+          <!-- Character Count -->
+          <div v-if="showCharCount && maxLength" :class="[
+            'text-xs',
+            inputMessage.length > maxLength * 0.8 ? 'text-orange-500' : 'text-gray-400',
+            inputMessage.length >= maxLength ? 'text-red-500' : ''
+          ]">
+            {{ inputMessage.length }}/{{ maxLength }}
+          </div>
 
-        <!-- Send Button -->
-        <button @click="sendMessage" :disabled="!canSend" :class="[
-          'bg-blue-600 text-white text-xs rounded px-2 py-2 absolute right-2 top-1/2 transform -translate-y-1/2 transition-all duration-200',
-          canSend
-            ? 'text-blue-600 hover:bg-blue-700'
-            : 'disabled:opacity-50 text-gray-300 cursor-not-allowed'
-        ]" title="Send message">
-          <svg v-if="!isLoading" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-          </svg>
-          <!-- Loading spinner -->
-          <svg v-else class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-            </path>
-          </svg>
-        </button>
+          <!-- Safety/Warning Icon -->
+          <button type="button"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100 transition-colors"
+            title="Safety notice" aria-label="Safety notice">
+            <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd"
+                d="M8.257 3.099c.765-1.36 2.72-1.36 3.485 0l6.518 11.586c.75 1.333-.213 2.985-1.742 2.985H3.48c-1.53 0-2.492-1.652-1.742-2.985L8.257 3.1zM11 13a1 1 0 10-2 0 1 1 0 002 0zm-1-8a1 1 0 00-.993.883L9 6v4a1 1 0 001.993.117L11 10V6a1 1 0 00-1-1z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+
+          <!-- Send Button -->
+          <button @click="sendMessage" :disabled="!canSend" :class="[
+            'bg-blue-600 text-white text-xs rounded px-2 py-2 transition-all duration-200',
+            canSend
+              ? 'text-blue-600 hover:bg-blue-700'
+              : 'disabled:opacity-50 text-gray-300 cursor-not-allowed'
+          ]" title="Send message">
+            <svg v-if="!isLoading" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+            <!-- Loading spinner -->
+            <svg v-else class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+              </path>
+            </svg>
+          </button>
+        </div>
 
         <!-- File input (hidden) -->
         <input v-if="allowFileUpload" ref="fileInputRef" type="file" :accept="acceptedFileTypes"

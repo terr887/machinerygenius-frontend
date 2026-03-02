@@ -1,138 +1,135 @@
 <template>
-  <section class="py-6 bg-gray-50">
-    <div class="container mx-auto px-6">
-      <div class="flex items-end justify-between flex-wrap gap-4 mb-6">
-        <div class="max-w-4xl">
-          <p class="uppercase tracking-wide text-xs text-gray-600">Contact Us</p>
-          <h1 class="mt-2 text-2xl font-bold leading-relaxed">Powered By Unmatched Data &amp; Expertise</h1>
-          <p class="mt-3 text-gray-600 max-w-3xl">
-            Built with experience from some of America’s largest and most respected machinery companies.
+  <div class="max-w-6xl mx-auto px-4 py-6">
+    <!-- HERO -->
+    <section class="bg-gradient-to-br from-blue-50 via-white to-amber-50 border border-gray-200 rounded-2xl p-6 mb-6">
+      <div class="flex items-center justify-between gap-6">
+        <div class="flex-1">
+          <span class="inline-flex items-center gap-2 border border-gray-200 rounded-full px-3 py-1 text-xs text-gray-600 bg-white">
+            <span aria-hidden="true">📞</span><span>Contact Us</span>
+          </span>
+          <h1 class="text-3xl font-bold text-gray-900 mt-4 mb-3">Powered By Unmatched Data &amp; Expertise</h1>
+          <p class="text-gray-600 max-w-3xl">
+            Built with experience from some of America's largest and most respected machinery companies.
             Purpose-built AI that understands the language of machining and delivers instant, reliable answers 24/7.
           </p>
+
+          <div class="flex flex-wrap gap-2 mt-4">
+            <span class="border border-gray-200 rounded-full px-3 py-1 text-xs text-gray-600 bg-white">Multilingual</span>
+            <span class="border border-gray-200 rounded-full px-3 py-1 text-xs text-gray-600 bg-white">OEM‑Qualified</span>
+            <span class="border border-gray-200 rounded-full px-3 py-1 text-xs text-gray-600 bg-white">Always Improving</span>
+          </div>
         </div>
-        <div class="flex items-center gap-2">
-          <span class="rounded-full border border-gray-200 px-3 py-1 text-xs text-gray-600">Multilingual</span>
-          <span class="rounded-full border border-gray-200 px-3 py-1 text-xs text-gray-600">OEM‑Qualified</span>
-          <span class="rounded-full border border-gray-200 px-3 py-1 text-xs text-gray-600">Always Improving</span>
-        </div>
+        <img src="/assets/machinery-genius.png" alt="Machinery Genius" class="w-32 h-32 object-contain flex-shrink-0 hidden md:block" />
       </div>
+    </section>
 
-      <section>
-        <div class="bg-white border border-gray-200 rounded-xl p-8">
-          <h2 class="text-xl font-semibold text-gray-900 mb-8">
-            Send us a Message
-          </h2>
+    <!-- CONTACT FORM -->
+    <article class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+      <h2 class="text-lg font-bold text-gray-900 mb-1">Send us a Message</h2>
+      <p class="text-sm text-gray-600 mb-4">Fill this out and we'll reply as soon as possible.</p>
 
-          <form @submit.prevent="submit" novalidate>
-            <!-- Status Message -->
-            <div v-if="statusMessage" :class="statusClass" class="text-sm p-4 rounded-lg mb-6 border">
-              {{ statusMessage }}
-            </div>
+      <hr class="border-gray-200 mb-4" />
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <!-- Name -->
-              <div class="space-y-2">
-                <label for="name" class="block text-sm font-medium text-gray-700">Full Name *</label>
-                <div class="relative">
-                  <input id="name" v-model.trim="form.name" type="text" :class="[
-                    'w-full px-4 py-3 border rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200',
-                    errors.name ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:border-gray-400'
-                  ]" placeholder="Enter your full name" />
-                  <div v-if="errors.name" class="absolute inset-y-0 right-0 flex items-center pr-3">
-                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                </div>
-                <p v-if="errors.name" class="text-xs text-red-600">{{ errors.name }}</p>
-              </div>
-
-              <!-- Email -->
-              <div class="space-y-2">
-                <label for="email" class="block text-sm font-medium text-gray-700">Email Address *</label>
-                <div class="relative">
-                  <input id="email" v-model.trim="form.email" type="email" :class="[
-                    'w-full px-4 py-3 border rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200',
-                    errors.email ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:border-gray-400'
-                  ]" placeholder="you@example.com" />
-                  <div v-if="errors.email" class="absolute inset-y-0 right-0 flex items-center pr-3">
-                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                </div>
-                <p v-if="errors.email" class="text-xs text-red-600">{{ errors.email }}</p>
-              </div>
-            </div>
-
-            <!-- Subject -->
-            <div class="space-y-2 mb-6">
-              <label for="subject" class="block text-sm font-medium text-gray-700">Subject</label>
-              <input id="subject" v-model.trim="form.subject" type="text"
-                class="w-full px-4 py-3 border border-gray-300 hover:border-gray-400 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                placeholder="What's this regarding?" />
-            </div>
-
-            <!-- Message -->
-            <div class="space-y-2 mb-6">
-              <label for="message" class="block text-sm font-medium text-gray-700">Message *</label>
-              <div class="relative">
-                <textarea id="message" v-model.trim="form.message" rows="6" :class="[
-                  'w-full px-4 py-3 border rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-vertical',
-                  errors.message ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:border-gray-400'
-                ]"
-                  placeholder="Please describe your inquiry, including machine model numbers if applicable..."></textarea>
-                <div v-if="errors.message" class="absolute top-3 right-3">
-                  <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-              </div>
-              <p v-if="errors.message" class="text-xs text-red-600">{{ errors.message }}</p>
-            </div>
-
-            <!-- Consent -->
-            <div class="flex items-start gap-3 mb-8">
-              <input id="consent" type="checkbox" v-model="form.consent"
-                class="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-              <label for="consent" class="text-sm text-gray-600 leading-relaxed">
-                I agree to be contacted regarding this inquiry and understand that my information will be handled
-                according to your privacy policy.
-              </label>
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" :disabled="sending"
-              class="flex items-center justify-center gap-3 px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">
-              <svg v-if="sending" class="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-opacity="0.25"></circle>
-                <path d="M22 12a10 10 0 00-10-10" stroke="currentColor" stroke-width="4" stroke-linecap="round"></path>
-              </svg>
-              <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-              </svg>
-              <span>{{ sending ? 'Sending Message...' : 'Send Message' }}</span>
-            </button>
-
-            <p class="text-xs text-gray-500 mt-4 text-center">
-              We typically respond within 1 business day. Your information is kept confidential.
-            </p>
-          </form>
+      <form @submit.prevent="submit" novalidate class="space-y-4">
+        <!-- Status Message -->
+        <div v-if="statusMessage" :class="statusClass" class="text-sm p-3 rounded-lg border">
+          {{ statusMessage }}
         </div>
-      </section>
-    </div>
-  </section>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Name -->
+          <div>
+            <label for="name" class="block text-xs font-bold text-gray-900 mb-1">Full Name *</label>
+            <div class="relative">
+              <input id="name" v-model.trim="form.name" type="text" :class="[
+                'w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition',
+                errors.name ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:border-gray-400'
+              ]" placeholder="Enter your full name" />
+              <div v-if="errors.name" class="absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+            <p v-if="errors.name" class="text-xs text-red-600 mt-1">{{ errors.name }}</p>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-xs font-bold text-gray-900 mb-1">Email Address *</label>
+            <div class="relative">
+              <input id="email" v-model.trim="form.email" type="email" :class="[
+                'w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition',
+                errors.email ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:border-gray-400'
+              ]" placeholder="you@example.com" />
+              <div v-if="errors.email" class="absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+            <p v-if="errors.email" class="text-xs text-red-600 mt-1">{{ errors.email }}</p>
+          </div>
+        </div>
+
+        <!-- Subject -->
+        <div>
+          <label for="subject" class="block text-xs font-bold text-gray-900 mb-1">Subject</label>
+          <input id="subject" v-model.trim="form.subject" type="text"
+            class="w-full px-3 py-2 text-sm border border-gray-300 hover:border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            placeholder="What's this regarding?" />
+        </div>
+
+        <!-- Message -->
+        <div>
+          <label for="message" class="block text-xs font-bold text-gray-900 mb-1">Message *</label>
+          <div class="relative">
+            <textarea id="message" v-model.trim="form.message" rows="4" :class="[
+              'w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition resize-y',
+              errors.message ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:border-gray-400'
+            ]" placeholder="Please describe your inquiry, including machine model numbers if applicable..."></textarea>
+            <div v-if="errors.message" class="absolute top-2 right-2">
+              <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+          <p v-if="errors.message" class="text-xs text-red-600 mt-1">{{ errors.message }}</p>
+        </div>
+
+        <!-- Consent -->
+        <div class="flex items-start gap-2">
+          <input id="consent" type="checkbox" v-model="form.consent"
+            class="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+          <label for="consent" class="text-xs text-gray-600">
+            I agree to be contacted regarding this inquiry and understand that my information will be handled according to your privacy policy.
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex items-center justify-between flex-wrap gap-4 pt-2">
+          <button type="submit" :disabled="sending"
+            class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition">
+            <svg v-if="sending" class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-opacity="0.25"></circle>
+              <path d="M22 12a10 10 0 00-10-10" stroke="currentColor" stroke-width="4" stroke-linecap="round"></path>
+            </svg>
+            <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+            <span>{{ sending ? 'Sending...' : 'Send Message' }}</span>
+          </button>
+          <p class="text-xs text-gray-500">We typically respond within 1 business day.</p>
+        </div>
+      </form>
+    </article>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { reactive, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
-/* --- form state --- */
 const router = useRouter();
 const apiBaseUrl = (import.meta.env.VITE_API_URL?.replace(/\/$/, '') || 'http://127.0.0.1:8000');
 const contactEndpoint = apiBaseUrl.endsWith('/api') ? `${apiBaseUrl}/contact` : `${apiBaseUrl}/api/contact`;
@@ -167,12 +164,11 @@ const errors = reactive({
 
 const sending = ref(false);
 const statusMessage = ref('');
-const statusType = ref(''); // 'success' | 'error'
+const statusType = ref('');
 
 const DEFAULT_SUCCESS_MESSAGE = 'Thank you for your message! We\'ll get back to you within 1 business day.';
 const DEFAULT_ERROR_MESSAGE = 'Sorry, we couldn\'t send your message. Please try again.';
 
-/* --- validation helpers --- */
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function validate() {
@@ -182,7 +178,6 @@ function validate() {
   return !errors.name && !errors.email && !errors.message;
 }
 
-/* --- submit --- */
 async function submit() {
   statusMessage.value = '';
   statusType.value = '';
@@ -221,7 +216,7 @@ async function submit() {
     try {
       data = await response.json();
     } catch (error) {
-      // Some backends respond with empty bodies; ignore JSON parse errors.
+      // Ignore JSON parse errors
     }
 
     if (!response.ok) {
@@ -253,7 +248,6 @@ async function submit() {
   }
 }
 
-/* --- computed for status styling --- */
 const statusClass = computed(() => {
   if (!statusType.value) return 'hidden';
   return statusType.value === 'success'
@@ -261,3 +255,7 @@ const statusClass = computed(() => {
     : 'bg-red-50 text-red-700 border-red-200';
 });
 </script>
+
+<style scoped>
+/* No custom CSS - using Tailwind only */
+</style>

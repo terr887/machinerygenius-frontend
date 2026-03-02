@@ -55,15 +55,15 @@
           </div>
 
           <form class="space-y-4" @submit.prevent="handleSubmit">
-            <div class="space-y-1">
-              <label class="text-sm font-medium text-gray-700">Email</label>
+            <div>
+              <label class="block text-xs font-bold text-gray-900 mb-1">Email</label>
               <input v-model="form.email" type="email" required placeholder="you@company.com"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-xs" />
+                class="w-full px-3 py-2 text-sm border border-gray-300 hover:border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
             </div>
-            <div class="space-y-1">
-              <label class="text-sm font-medium text-gray-700">Password</label>
+            <div>
+              <label class="block text-xs font-bold text-gray-900 mb-1">Password</label>
               <input v-model="form.password" type="password" required placeholder="Enter your password"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-xs" />
+                class="w-full px-3 py-2 text-sm border border-gray-300 hover:border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
             </div>
 
             <div class="flex items-center justify-between pt-1">
@@ -75,7 +75,7 @@
               </RouterLink>
             </div>
 
-            <button type="submit" :disabled="authStore.loading" class="w-full inline-flex justify-center items-center gap-2 rounded-lg bg-blue-600 text-white font-semibold py-3 shadow-md hover:bg-blue-700 transition disabled:opacity-60 disabled:cursor-not-allowed">
+            <button type="submit" :disabled="authStore.loading" class="w-full px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition">
               <span v-if="authStore.loading">Signing in...</span>
               <span v-else>Login</span>
             </button>

@@ -6,7 +6,7 @@
     <Sidebar v-if="showLeftSidebar" class="hidden xl:flex border-r border-gray-200" />
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col relative min-h-0">
+    <div class="flex-1 h-full flex flex-col relative min-h-0">
 
       <!-- Mobile topbar with toggles -->
       <div v-if="showNavigation" class="flex items-center justify-between px-3 py-2 border-b border-gray-200 xl:hidden">
@@ -32,12 +32,12 @@
       </div>
 
       <!-- Routed Content -->
-      <div class="relative flex-1 min-h-0 overflow-y-auto">
+      <div class="relative flex-1 h-full min-h-0 overflow-y-auto">
         <RouterView v-slot="{ Component, route: viewRoute }">
           <template v-if="isPopup">
             <!-- Background: last non-popup view -->
             <component :is="backgroundComponent" :key="backgroundKey"
-              class="flex-none lg:flex-1 overflow-y-visible lg:overflow-y-auto" />
+              class="flex-none lg:flex-1 min-h-full overflow-y-visible lg:overflow-y-auto" />
 
             <!-- Overlay popup wrapper -->
             <div class="fixed inset-0 z-[200]">
@@ -51,7 +51,7 @@
           </template>
 
           <component v-else :is="Component" :key="viewRoute.fullPath"
-            class="flex-none lg:flex-1 overflow-y-visible lg:overflow-y-auto" />
+            class="flex-none lg:flex-1 min-h-full overflow-y-visible lg:overflow-y-auto" />
         </RouterView>
       </div>
     </div>
@@ -70,7 +70,7 @@
         class="fixed left-0 top-0 w-72 h-full bg-white border-r border-gray-200 z-50 flex flex-col xl:hidden">
         <!-- Close button absolute -->
         <button @click="showSidebar = false"
-          class="absolute top-3 -right-5 z-99 px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:text-gray-900">
+          class="absolute top-3 right-3 z-50 flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-700 shadow-sm hover:text-gray-900">
           ✕
         </button>
 
