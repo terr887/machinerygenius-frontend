@@ -80,12 +80,6 @@
               <span v-else>Login</span>
             </button>
 
-            <p v-if="localError" class="text-sm text-red-600 bg-red-50 border border-red-100 rounded-md px-3 py-2">
-              {{ localError }}
-            </p>
-            <p v-if="successMessage" class="text-sm text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-md px-3 py-2">
-              {{ successMessage }}
-            </p>
           </form>
         </div>
       </div>
@@ -97,10 +91,12 @@
 import { reactive, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useToastStore } from '@/stores/toast'
 
 const authStore = useAuthStore()
 const router = useRouter()
 const route = useRoute()
+const toastStore = useToastStore()
 
 const form = reactive({
   email: '',
@@ -115,17 +111,23 @@ const handleSubmit = async () => {
   successMessage.value = ''
 
   if (!form.email || !form.password) {
-    localError.value = 'Please fill in your email and password.'
+    const message = 'Please fill in your email and password.'
+    localError.value = message
+    toastStore.error(message)
     return
   }
 
   try {
     await authStore.login({ ...form })
-    successMessage.value = 'Login successful. Redirecting...'
+    const message = 'Login successful. Redirecting...'
+    successMessage.value = message
+    toastStore.success(message)
     const redirect = (route.query?.redirect as string) || { name: 'account' }
     setTimeout(() => router.push(redirect), 400)
   } catch (error) {
-    localError.value = authStore.error || 'Unable to sign in right now.'
+    const message = authStore.error || 'Unable to sign in right now.'
+    localError.value = message
+    toastStore.error(message)
   }
 }
 </script>

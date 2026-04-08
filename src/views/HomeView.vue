@@ -7,17 +7,19 @@
       <div class="h-full min-h-full flex items-center justify-center py-8 sm:py-10">
         <div class="w-full max-w-4xl mx-auto px-4 sm:px-6 flex items-center justify-center">
           <div class="w-full text-center max-w-3xl mx-auto">
-          <div class="flex items-center justify-center">
-            <img src="/assets/machinery-genius.png" alt="Machinery Genius"
-              class="w-28 h-28 sm:w-40 sm:h-40 object-cover rounded-full mx-auto" />
-          </div>
-          <h2 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2 mt-5 sm:mt-6">Hi, I am Machinery Genius</h2>
-          <p class="text-sm sm:text-base text-gray-600 mb-6">AI-powered support — Visual diagnostic, manuals, maintenance tracking,
-            part sourcing, and more.</p>
+            <div class="flex items-center justify-center">
+              <img src="/assets/machinery-genius.png" alt="Machinery Genius"
+                class="w-28 h-28 sm:w-40 sm:h-40 object-cover rounded-full mx-auto" />
+            </div>
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2 mt-5 sm:mt-6">Hi, I am Machinery Genius</h2>
+            <p class="text-sm sm:text-base text-gray-600 mb-6">AI-powered support — Visual diagnostic, manuals, maintenance tracking,
+              part sourcing, and more.</p>
 
-          <ChatInput :allowFileUpload="false" :is-loading="isLoading" :show-typing-indicator="isTyping"
-            :auto-focus="true" @send-message="handleSendMessage" placeholder="Ask me anything about machinery"
-            :hasTopBorder="false" />
+            <ChatUsageStats v-if="authStore.isAuthenticated" :user="authStore.user" class="mb-6 text-left" />
+
+            <ChatInput :allowFileUpload="false" :is-loading="isLoading" :show-typing-indicator="isTyping"
+              :auto-focus="true" @send-message="handleSendMessage" placeholder="Ask me anything about machinery"
+              :hasTopBorder="false" />
           </div>
         </div>
       </div>
@@ -29,14 +31,18 @@
 import { ref, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSessionStore } from '@/stores/session'
+import { useAuthStore } from '@/stores/auth'
 import ChatInput from '@/components/ChatInput.vue'
-import api from '@/services/ApiService'
+import ChatUsageStats from '@/components/ChatUsageStats.vue'
 import SafetyWarning from '@/components/SafetyWarning.vue'
+import { useServices } from '@/services/container'
 
+const { api } = useServices()
 const isLoading = ref(false)
 const isTyping = ref(false)
 const router = useRouter()
 const sessionStore = useSessionStore()
+const authStore = useAuthStore()
 
 const scrollToBottom = () => {
   const container = document.querySelector('.overflow-y-auto')

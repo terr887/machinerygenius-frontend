@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
-import AuthService from '@/services/AuthService'
 import type {
     AuthCredentials,
     RegisterPayload,
     ChangePasswordPayload,
     AuthUser
 } from '@/services/AuthService'
+import { getServices } from '@/services/container'
 
 const resolveErrorMessage = (error: any, fallback: string) => {
     const message =
@@ -56,6 +56,12 @@ const persistUser = (user: AuthUser | null) => {
     }
 }
 
+const services = getServices()
+
+const extractUserFromPayload = (payload: any): AuthUser | null => {
+    return payload?.user || payload?.data?.user || null
+}
+
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         token: localStorage.getItem(TOKEN_STORAGE_KEY) || '',
@@ -81,6 +87,18 @@ export const useAuthStore = defineStore('auth', {
             localStorage.setItem(TOKEN_STORAGE_KEY, token)
             persistUser(user)
         },
+        mergeUser(partial: Partial<AuthUser>) {
+            if (!this.user) {
+                return
+            }
+
+            this.user = {
+                ...this.user,
+                ...partial,
+            }
+
+            persistUser(this.user)
+        },
         clearAuth() {
             this.token = ''
             this.user = null
@@ -91,9 +109,9 @@ export const useAuthStore = defineStore('auth', {
             this.loading = true
             this.error = null
             try {
-                const { data } = await AuthService.login(credentials)
+                const { data } = await services.auth.login(credentials)
                 const token = data?.token || data?.data?.token
-                const user = data?.user || data?.data?.user
+                const user = extractUserFromPayload(data)
                 if (token && user) {
                     this.setAuth(token, user)
                 }
@@ -109,7 +127,7 @@ export const useAuthStore = defineStore('auth', {
             this.loading = true
             this.error = null
             try {
-                const { data } = await AuthService.register(payload)
+                const { data } = await services.auth.register(payload)
                 // Ensure any stale credentials are cleared so user must log in after activation.
                 this.clearAuth()
                 return data
@@ -125,8 +143,8 @@ export const useAuthStore = defineStore('auth', {
             this.loading = true
             this.error = null
             try {
-                const { data } = await AuthService.getProfile()
-                this.user = data?.user || data
+                const { data } = await services.auth.getProfile()
+                this.user = extractUserFromPayload(data)
                 if (this.user) {
                     persistUser(this.user)
                 }
@@ -144,7 +162,7 @@ export const useAuthStore = defineStore('auth', {
             this.loading = true
             this.error = null
             try {
-                const { data } = await AuthService.forgotPassword(email)
+                const { data } = await services.auth.forgotPassword(email)
                 return data
             } catch (error: any) {
                 this.error = resolveErrorMessage(error, 'Unable to send reset link.')
@@ -157,7 +175,7 @@ export const useAuthStore = defineStore('auth', {
             this.loading = true
             this.error = null
             try {
-                const { data } = await AuthService.resetPassword(payload)
+                const { data } = await services.auth.resetPassword(payload)
                 return data
             } catch (error: any) {
                 this.error = resolveErrorMessage(error, 'Unable to reset password.')
@@ -170,7 +188,7 @@ export const useAuthStore = defineStore('auth', {
             this.loading = true
             this.error = null
             try {
-                const { data } = await AuthService.changePassword(payload)
+                const { data } = await services.auth.changePassword(payload)
                 return data
             } catch (error: any) {
                 this.error = resolveErrorMessage(error, 'Unable to change password.')
@@ -183,7 +201,7 @@ export const useAuthStore = defineStore('auth', {
             this.loading = true
             this.error = null
             try {
-                const { data } = await AuthService.verifyEmail(payload)
+                const { data } = await services.auth.verifyEmail(payload)
                 return data
             } catch (error: any) {
                 this.error = resolveErrorMessage(error, 'Unable to verify email. The link may be invalid or expired.')
@@ -196,7 +214,7 @@ export const useAuthStore = defineStore('auth', {
             this.loading = true
             this.error = null
             try {
-                const { data } = await AuthService.verifyEmailLink(payload)
+                const { data } = await services.auth.verifyEmailLink(payload)
                 return data
             } catch (error: any) {
                 this.error = resolveErrorMessage(error, 'Unable to verify email. The link may be invalid or expired.')
@@ -210,7 +228,7 @@ export const useAuthStore = defineStore('auth', {
             this.error = null
             try {
                 if (this.token) {
-                    await AuthService.logout()
+                    await services.auth.logout()
                 }
             } catch (error: any) {
                 this.error = resolveErrorMessage(error, 'Unable to log out at the moment.')

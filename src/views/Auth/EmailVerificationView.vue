@@ -124,14 +124,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useToastStore } from '@/stores/toast'
 
 type VerificationState = 'idle' | 'pending' | 'success' | 'error'
 
 const authStore = useAuthStore()
 const route = useRoute()
+const toastStore = useToastStore()
 
 const firstQueryValue = (value: unknown): string => {
   if (Array.isArray(value)) {
@@ -384,6 +386,18 @@ const runSignedLinkVerification = async () => {
 const handleManualSubmit = async () => {
   await runVerification()
 }
+
+watch(statusMessage, (message) => {
+  if (message) {
+    toastStore.success(message)
+  }
+})
+
+watch(errorMessage, (message) => {
+  if (message) {
+    toastStore.error(message)
+  }
+})
 
 onMounted(async () => {
   applyResponseFromQuery()

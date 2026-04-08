@@ -30,6 +30,19 @@ export interface AuthUser {
     company?: string
     role?: string
     enabled?: boolean
+    plan?: string | null
+    free_questions_remaining?: number
+    free_questions_used?: number
+    lifetime_questions_used?: number
+    token_balance?: number
+    sponsored_token_balance?: number
+    subscription_status?: string
+    has_unlimited_questions?: boolean
+    total_questions_remaining?: number | null
+    current_question_source?: string | null
+    current_question_source_label?: string
+    remaining_questions_label?: string
+    header_label?: string
     created_at?: string
     updated_at?: string
 }

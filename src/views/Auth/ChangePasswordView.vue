@@ -51,13 +51,6 @@
             <span v-if="authStore.loading">Updating...</span>
             <span v-else>Change Password</span>
           </button>
-
-          <p v-if="localError" class="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
-            {{ localError }}
-          </p>
-          <p v-if="successMessage" class="text-sm text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2">
-            {{ successMessage }}
-          </p>
         </form>
       </div>
 
@@ -90,9 +83,11 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useToastStore } from '@/stores/toast'
 
 const authStore = useAuthStore()
 const router = useRouter()
+const toastStore = useToastStore()
 
 const form = reactive({
   currentPassword: '',
@@ -108,12 +103,16 @@ const handleSubmit = async () => {
   successMessage.value = ''
 
   if (!form.currentPassword || !form.newPassword || !form.confirmPassword) {
-    localError.value = 'All fields are required.'
+    const message = 'All fields are required.'
+    localError.value = message
+    toastStore.error(message)
     return
   }
 
   if (form.newPassword !== form.confirmPassword) {
-    localError.value = 'New passwords do not match.'
+    const message = 'New passwords do not match.'
+    localError.value = message
+    toastStore.error(message)
     return
   }
 
@@ -123,10 +122,14 @@ const handleSubmit = async () => {
       password: form.newPassword,
       password_confirmation: form.confirmPassword
     })
-    successMessage.value = 'Password updated successfully.'
+    const message = 'Password updated successfully.'
+    successMessage.value = message
+    toastStore.success(message)
     setTimeout(() => router.push({ name: 'account' }), 500)
   } catch (error) {
-    localError.value = authStore.error || 'Unable to change password right now.'
+    const message = authStore.error || 'Unable to change password right now.'
+    localError.value = message
+    toastStore.error(message)
   }
 }
 </script>

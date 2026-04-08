@@ -160,10 +160,12 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { useToastStore } from '@/stores/toast';
 
 const route = useRoute();
+const toastStore = useToastStore();
 const DEFAULT_MESSAGE = 'Thanks for reaching out. We will get back to you shortly.';
 
 const successMessage = computed(() => {
@@ -172,6 +174,14 @@ const successMessage = computed(() => {
     return message[0] || DEFAULT_MESSAGE;
   }
   return (message as string | undefined)?.trim() || DEFAULT_MESSAGE;
+});
+
+onMounted(() => {
+  const message = route.query.message;
+  const toastMessage = Array.isArray(message) ? message[0] : message;
+  if (typeof toastMessage === 'string' && toastMessage.trim()) {
+    toastStore.success(toastMessage.trim());
+  }
 });
 </script>
 <style>

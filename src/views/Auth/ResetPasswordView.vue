@@ -35,14 +35,7 @@
             <span v-else>Reset password</span>
           </button>
         </form>
-
-        <p v-if="localError" class="mt-4 text-sm text-red-600 bg-red-50 border border-red-100 rounded-md px-3 py-2 w-fit">
-          {{ localError }}
-        </p>
-        <p v-if="successMessage" class="mt-4 text-sm text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-md px-3 py-2 w-fit">
-          {{ successMessage }}
-        </p>
-        <RouterLink v-if="successMessage" to="/login"
+        <RouterLink v-if="hasResetSuccess" to="/login"
           class="mt-4 inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-700">
           Back to login
         </RouterLink>
@@ -58,9 +51,11 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useToastStore } from '@/stores/toast'
 
 const route = useRoute()
 const authStore = useAuthStore()
+const toastStore = useToastStore()
 
 const email = computed(() => (route.query.email as string | undefined) || '')
 const token = computed(() => (route.query.token as string | undefined) || '')
@@ -69,6 +64,7 @@ const password = ref('')
 const passwordConfirmation = ref('')
 const localError = ref('')
 const successMessage = ref('')
+const hasResetSuccess = computed(() => Boolean(successMessage.value))
 
 const missingLink = computed(() => !email.value || !token.value)
 const canSubmit = computed(() => !missingLink.value)
@@ -86,17 +82,23 @@ const handleSubmit = async () => {
   successMessage.value = ''
 
   if (missingLink.value) {
-    localError.value = 'This reset link is invalid. Please request a new link.'
+    const message = 'This reset link is invalid. Please request a new link.'
+    localError.value = message
+    toastStore.error(message)
     return
   }
 
   if (!password.value || password.value.length < 8) {
-    localError.value = 'Please enter a password with at least 8 characters.'
+    const message = 'Please enter a password with at least 8 characters.'
+    localError.value = message
+    toastStore.error(message)
     return
   }
 
   if (password.value !== passwordConfirmation.value) {
-    localError.value = 'Passwords do not match.'
+    const message = 'Passwords do not match.'
+    localError.value = message
+    toastStore.error(message)
     return
   }
 
@@ -107,11 +109,16 @@ const handleSubmit = async () => {
       password: password.value,
       password_confirmation: passwordConfirmation.value
     })
-    successMessage.value = response?.message || 'Your password has been updated. You can now log in.'
+    const message =
+      response?.message || 'Your password has been updated. You can now log in.'
+    successMessage.value = message
+    toastStore.success(message)
     password.value = ''
     passwordConfirmation.value = ''
   } catch (error) {
-    localError.value = authStore.error || 'Unable to reset password right now.'
+    const message = authStore.error || 'Unable to reset password right now.'
+    localError.value = message
+    toastStore.error(message)
   }
 }
 </script>

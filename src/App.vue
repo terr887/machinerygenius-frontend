@@ -77,6 +77,8 @@
         <MobileSidebar />
       </div>
     </transition>
+
+    <ToastContainer />
   </div>
 </template>
 
@@ -88,6 +90,7 @@ import FullScreenLoader from "@/components/FullScreenLoader.vue"
 import AsideMenu from "./components/AsideMenu.vue"
 import MobileSidebar from "./components/MobileSidebar.vue"
 import HomeView from "@/views/HomeView.vue"
+import ToastContainer from "@/components/common/toastcontainer.vue"
 
 const showSidebar = ref(false)
 const showAside = ref(false)

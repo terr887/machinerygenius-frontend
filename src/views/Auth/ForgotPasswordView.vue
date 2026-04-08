@@ -26,13 +26,6 @@
             <span v-else>Send reset link</span>
           </button>
         </form>
-
-        <p v-if="localError" class="mt-4 text-sm text-red-600 bg-red-50 border border-red-100 rounded-md px-3 py-2 w-fit">
-          {{ localError }}
-        </p>
-        <p v-if="successMessage" class="mt-4 text-sm text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-md px-3 py-2 w-fit">
-          {{ successMessage }}
-        </p>
       </div>
     </div>
   </div>
@@ -41,8 +34,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { useToastStore } from '@/stores/toast'
 
 const authStore = useAuthStore()
+const toastStore = useToastStore()
 const email = ref('')
 const localError = ref('')
 const successMessage = ref('')
@@ -52,15 +47,22 @@ const handleSubmit = async () => {
   successMessage.value = ''
 
   if (!email.value) {
-    localError.value = 'Please enter the email associated with your account.'
+    const message = 'Please enter the email associated with your account.'
+    localError.value = message
+    toastStore.error(message)
     return
   }
 
   try {
     const response = await authStore.forgotPassword(email.value)
-    successMessage.value = response?.message || 'If this email is registered, we have sent a reset link.'
+    const message =
+      response?.message || 'If this email is registered, we have sent a reset link.'
+    successMessage.value = message
+    toastStore.success(message)
   } catch (error) {
-    localError.value = authStore.error || 'Unable to send reset link right now.'
+    const message = authStore.error || 'Unable to send reset link right now.'
+    localError.value = message
+    toastStore.error(message)
   }
 }
 </script>

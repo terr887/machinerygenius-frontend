@@ -31,11 +31,6 @@
       <hr class="border-gray-200 mb-4" />
 
       <form @submit.prevent="submit" novalidate class="space-y-4">
-        <!-- Status Message -->
-        <div v-if="statusMessage" :class="statusClass" class="text-sm p-3 rounded-lg border">
-          {{ statusMessage }}
-        </div>
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Name -->
           <div>
@@ -127,10 +122,12 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed } from 'vue';
+import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useToastStore } from '@/stores/toast';
 
 const router = useRouter();
+const toastStore = useToastStore();
 const apiBaseUrl = (import.meta.env.VITE_API_URL?.replace(/\/$/, '') || 'http://127.0.0.1:8000');
 const contactEndpoint = apiBaseUrl.endsWith('/api') ? `${apiBaseUrl}/contact` : `${apiBaseUrl}/api/contact`;
 
@@ -163,8 +160,6 @@ const errors = reactive({
 });
 
 const sending = ref(false);
-const statusMessage = ref('');
-const statusType = ref('');
 
 const DEFAULT_SUCCESS_MESSAGE = 'Thank you for your message! We\'ll get back to you within 1 business day.';
 const DEFAULT_ERROR_MESSAGE = 'Sorry, we couldn\'t send your message. Please try again.';
@@ -179,12 +174,8 @@ function validate() {
 }
 
 async function submit() {
-  statusMessage.value = '';
-  statusType.value = '';
-
   if (!validate()) {
-    statusMessage.value = 'Please fix the errors above and try again.';
-    statusType.value = 'error';
+    toastStore.error('Please fix the errors above and try again.');
     return;
   }
 
@@ -226,9 +217,7 @@ async function submit() {
     const responseStatus = data?.status === 'error' || data?.status === false ? 'error' : 'success';
     const responseMessage = data?.message?.trim();
 
-    statusType.value = responseStatus;
     const finalMessage = responseMessage || (responseStatus === 'success' ? DEFAULT_SUCCESS_MESSAGE : DEFAULT_ERROR_MESSAGE);
-    statusMessage.value = finalMessage;
 
     if (responseStatus === 'success') {
       form.name = '';
@@ -237,23 +226,20 @@ async function submit() {
       form.message = '';
       form.consent = true;
       await router.push({ name: 'thank-you', query: { message: finalMessage } });
+      return;
     }
+
+    toastStore.error(finalMessage);
   } catch (error) {
     console.error(error);
     const message = error instanceof Error ? error.message : '';
-    statusMessage.value = message ? `Sorry, we couldn't send your message: ${message}` : DEFAULT_ERROR_MESSAGE;
-    statusType.value = 'error';
+    toastStore.error(
+      message ? `Sorry, we couldn't send your message: ${message}` : DEFAULT_ERROR_MESSAGE,
+    );
   } finally {
     sending.value = false;
   }
 }
-
-const statusClass = computed(() => {
-  if (!statusType.value) return 'hidden';
-  return statusType.value === 'success'
-    ? 'bg-green-50 text-green-700 border-green-200'
-    : 'bg-red-50 text-red-700 border-red-200';
-});
 </script>
 
 <style scoped>

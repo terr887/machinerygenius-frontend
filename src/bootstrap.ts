@@ -1,14 +1,15 @@
-import api from '@/services/ApiService'
 import { useSessionStore } from '@/stores/session'
 import { useAuthStore } from '@/stores/auth'
+import { getServices } from '@/services/container'
 
 export async function bootstrapApp(): Promise<void> {
+    const services = getServices()
     const sessionStore = useSessionStore()
     const authStore = useAuthStore()
 
     try {
-        const res = await api.getChats()
-        if(res.data){
+        const res = await services.api.getChats()
+        if (res.data) {
             sessionStore.setSessions(res.data.sessions)
         }
     } catch (error) {
