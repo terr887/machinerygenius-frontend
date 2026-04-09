@@ -6,6 +6,7 @@ interface ImportMetaEnv {
   readonly VITE_LOGIN_ID?: string;
   readonly VITE_ACCEPT_JS_URL?: string;
   readonly VITE_AUTHORIZE_NET_ENV?: string;
+  readonly VITE_API_URL?: string;
 }
 
 interface ImportMeta {
