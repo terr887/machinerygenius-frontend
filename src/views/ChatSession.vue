@@ -46,6 +46,34 @@
       </div>
     </transition>
 
+    <transition name="fade">
+      <div v-if="showQuestionLimitModal" class="fixed inset-0 z-[90] flex items-center justify-center px-4">
+        <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-sm" @click="closeQuestionLimitModal"></div>
+        <div class="relative z-[91] w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
+          <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-600">Limit Reached</p>
+          <h2 class="mt-2 text-2xl font-bold text-slate-900">{{ questionLimitTitle }}</h2>
+          <p class="mt-3 text-sm leading-6 text-slate-600">
+            {{ questionLimitMessage }}
+          </p>
+
+          <div class="mt-6 flex flex-col gap-2 sm:flex-row">
+            <button
+              @click="goToUpgrade"
+              class="inline-flex items-center justify-center rounded-lg bg-amber-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-amber-700"
+            >
+              Purchase Tokens / Upgrade
+            </button>
+            <button
+              @click="closeQuestionLimitModal"
+              class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            >
+              Maybe Later
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
+
     <!-- Chat Messages -->
     <div ref="messagesContainer" class="messages-scroll flex-1 min-h-0 overflow-y-auto px-3 py-4 sm:px-6 sm:py-6"
       @scroll="onScroll">
@@ -200,6 +228,9 @@ const showScrollButton = ref(false) // derived UI - we show button only when use
 const showSavePanel = ref(false)
 const showUpgradePrompt = ref(false)
 const usageMinimized = ref(false)
+const showQuestionLimitModal = ref(false)
+const questionLimitTitle = ref('Question Limit Reached')
+const questionLimitMessage = ref('You have used your free questions. Purchase tokens or upgrade your plan to continue asking questions.')
 const machineLoading = ref(false)
 const saveLoading = ref(false)
 const machines = ref([])
@@ -240,6 +271,15 @@ const closeUpgradePrompt = () => {
   showUpgradePrompt.value = false
 }
 
+const openQuestionLimitModal = (message) => {
+  questionLimitMessage.value = message || questionLimitMessage.value
+  showQuestionLimitModal.value = true
+}
+
+const closeQuestionLimitModal = () => {
+  showQuestionLimitModal.value = false
+}
+
 const loadMachines = async () => {
   try {
     machineLoading.value = true
@@ -275,7 +315,8 @@ const goToAccount = () => {
 
 const goToUpgrade = () => {
   closeUpgradePrompt()
-  router.push({ name: 'account' })
+  // navigate directly to billing section
+  router.push({ name: 'account', hash: '#billing' })
 }
 
 const handleSaveChat = async () => {
@@ -338,6 +379,19 @@ const pushMessage = (role, content, extra = {}) => {
   return message
 }
 
+const isQuestionLimitReachedForUser = (user) => {
+  if (!user) return false
+  if (user.has_unlimited_questions) return false
+  if (user.is_question_limit_reached) return true
+  if (typeof user.total_questions_remaining === 'number') {
+    return user.total_questions_remaining <= 0
+  }
+  const free = Number(user.free_questions_remaining ?? 0)
+  const tokens = Number(user.token_balance ?? 0)
+  const sponsored = Number(user.sponsored_token_balance ?? 0)
+  return free <= 0 && tokens <= 0 && sponsored <= 0
+}
+
 const removeMessageById = (messageId) => {
   if (!messageId) {
     return
@@ -381,6 +435,10 @@ const sendToAI = async (question, pendingMessageId = null) => {
     })
     if (res.data?.billing) {
       authStore.mergeUser(res.data.billing)
+      // open question limit modal if backend signals limit reached
+      if (res.data.billing.is_question_limit_reached) {
+        openQuestionLimitModal(res.data.billing.paywall?.message)
+      }
     } else {
       await authStore.fetchProfile()
     }
@@ -394,6 +452,12 @@ const sendToAI = async (question, pendingMessageId = null) => {
 }
 
 const handleSendMessage = async (message) => {
+  // prevent sending when user has no remaining questions
+  if (isQuestionLimitReachedForUser(authStore.user)) {
+    openQuestionLimitModal()
+    return
+  }
+
   const pendingMessage = pushMessage('user', message.text)
   await tryAutoScrollOnNewMessage() // if user was at bottom, will scroll now (because message was added)
   await sendToAI(message.text, pendingMessage.id)
@@ -461,6 +525,30 @@ onMounted(async () => {
     showScrollButton.value = !isAtBottom.value
   }
 
+  // Start polling / focus listeners to keep billing info in-sync
+  const REFRESH_INTERVAL_MS = 30000
+  let pollId = null
+  const doRefreshProfile = async () => {
+    try {
+      if (authStore.token) await authStore.fetchProfile()
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  // initial check and start interval
+  await doRefreshProfile()
+  pollId = setInterval(doRefreshProfile, REFRESH_INTERVAL_MS)
+
+  const onFocus = () => doRefreshProfile()
+  window.addEventListener('focus', onFocus)
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') doRefreshProfile()
+  })
+
+  // save interval and listeners for cleanup
+  ;(pageRef.value || window)._mg_poll = { pollId, onFocus }
+
   await nextTick()
   updateFooterHeight()
   if (footerRef.value && typeof ResizeObserver !== 'undefined') {
@@ -478,10 +566,33 @@ watch(() => route.params.session, async (newSessionId, oldSessionId) => {
   }
 })
 
+watch(() => authStore.user, (newUser) => {
+  try {
+    if (isQuestionLimitReachedForUser(newUser)) {
+      openQuestionLimitModal()
+    } else {
+      closeQuestionLimitModal()
+    }
+  } catch (e) {
+    // ignore
+  }
+}, { immediate: true })
+
 onBeforeUnmount(() => {
   if (footerObserver) {
     footerObserver.disconnect()
     footerObserver = null
+  }
+  // cleanup polling/listeners
+  try {
+    const holder = (pageRef.value || window)._mg_poll
+    if (holder) {
+      if (holder.pollId) clearInterval(holder.pollId)
+      if (holder.onFocus) window.removeEventListener('focus', holder.onFocus)
+      ;(pageRef.value || window)._mg_poll = null
+    }
+  } catch (e) {
+    // ignore
   }
 })
 </script>

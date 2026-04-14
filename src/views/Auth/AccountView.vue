@@ -1,7 +1,7 @@
 <template>
   <div class="w-full bg-gradient-to-br from-slate-50 via-white to-blue-50">
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      <section
+      <section id="account-top"
         class="relative overflow-hidden rounded-[32px] bg-slate-900 px-6 py-7 text-white shadow-2xl sm:px-8 sm:py-8"
       >
         <div
@@ -149,7 +149,7 @@
       </section>
 
       <div class="mt-6 grid gap-6 xl:grid-cols-[1.05fr,0.95fr]">
-        <article
+        <article id="profile"
           class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm"
         >
           <div class="flex flex-wrap items-start justify-between gap-4">
@@ -218,7 +218,7 @@
           </div>
         </article>
 
-        <article
+        <article id="security"
           class="relative overflow-hidden rounded-[28px] bg-slate-900 p-6 text-white shadow-lg"
         >
           <div
@@ -297,7 +297,7 @@
       </div>
 
       <div class="mt-6 grid gap-6 xl:grid-cols-[1.05fr,0.95fr]">
-        <article
+        <article id="machines"
           class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm"
         >
           <div
@@ -508,7 +508,7 @@
           </div>
         </article>
 
-        <article
+        <article id="billing"
           class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm"
         >
           <div
@@ -834,8 +834,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from "vue";
-import { useRouter } from "vue-router";
+import { computed, onMounted, reactive, ref, watch, nextTick } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import PaymentSheetModal from "@/components/billing/PaymentSheetModal.vue";
 import type {
   BillingAddressPayload,
@@ -1500,8 +1500,37 @@ onMounted(async () => {
   syncPaymentIdentity();
 
   await Promise.all([loadMachines(), loadBillingCheckout()]);
-});
 
+  // If a hash or query section is provided, scroll to that section
+  const scrollToSection = (sec?: string) => {
+    if (!sec) return;
+    const id = String(sec).replace(/^#/, "");
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 120);
+  };
+
+  // prefer explicit hash, fallback to ?section=...
+  const route = useRoute();
+  if (route.hash) {
+    scrollToSection(route.hash);
+  } else if (route.query && route.query.section) {
+    scrollToSection(String(route.query.section));
+  }
+});
+onMounted(async () => {
+  await nextTick()
+
+  if (window.location.hash) {
+    const el = document.querySelector(window.location.hash)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+})
 const handleLogout = async () => {
   statusMessage.value = "";
   errorMessage.value = "";

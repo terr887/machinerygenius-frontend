@@ -16,8 +16,8 @@ export async function bootstrapApp(): Promise<void> {
         console.error('Failed to bootstrap sessions:', error)
     }
 
-    // Try to hydrate the user if a token is present
-    if (authStore.token && !authStore.user) {
+    // Try to hydrate the user if a token is present (always refresh from server)
+    if (authStore.token) {
         try {
             await authStore.fetchProfile()
         } catch (error) {

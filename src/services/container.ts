@@ -40,7 +40,7 @@ export function getServices(): ServiceContainer {
     return services
 }
 
-declare module '@vue/runtime-core' {
+declare module 'vue' {
     interface ComponentCustomProperties {
         $services: ServiceContainer
     }
