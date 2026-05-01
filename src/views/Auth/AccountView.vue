@@ -1,7 +1,7 @@
 <template>
   <div class="w-full bg-gradient-to-br from-slate-50 via-white to-blue-50">
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      <section
+      <section id="account-top"
         class="relative overflow-hidden rounded-[32px] bg-slate-900 px-6 py-7 text-white shadow-2xl sm:px-8 sm:py-8"
       >
         <div
@@ -149,7 +149,7 @@
       </section>
 
       <div class="mt-6 grid gap-6 xl:grid-cols-[1.05fr,0.95fr]">
-        <article
+        <article id="profile"
           class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm"
         >
           <div class="flex flex-wrap items-start justify-between gap-4">
@@ -218,7 +218,7 @@
           </div>
         </article>
 
-        <article
+        <article id="security"
           class="relative overflow-hidden rounded-[28px] bg-slate-900 p-6 text-white shadow-lg"
         >
           <div
@@ -297,7 +297,7 @@
       </div>
 
       <div class="mt-6 grid gap-6 xl:grid-cols-[1.05fr,0.95fr]">
-        <article
+        <article id="machines"
           class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm"
         >
           <div
@@ -508,7 +508,7 @@
           </div>
         </article>
 
-        <article
+        <article id="billing"
           class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm"
         >
           <div
@@ -577,8 +577,8 @@
               </p>
               <p class="mt-2 text-sm font-semibold text-amber-950">
                 {{
-                  tokenUnitPrice > 0
-                    ? `${formatCurrency(tokenUnitPrice)} per token`
+                  tokensPerDollar > 0
+                    ? `${formatTokenCount(tokensPerDollar)} tokens per $1`
                     : "Token pricing unavailable"
                 }}
               </p>
@@ -608,8 +608,8 @@
                   class="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-blue-700"
                 >
                   {{
-                    tokenUnitPrice > 0
-                      ? `${formatCurrency(tokenUnitPrice)} each`
+                    tokensPerDollar > 0
+                      ? `${formatTokenCount(tokensPerDollar)} / $1`
                       : "Pricing unavailable"
                   }}
                 </span>
@@ -623,7 +623,7 @@
                   <input
                     v-model.number="tokenPurchaseForm.tokens"
                     type="number"
-                    min="1"
+                    min="10000"
                     class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -635,8 +635,8 @@
                     class="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700"
                   >
                     {{
-                      tokenUnitPrice > 0
-                        ? `${formatCurrency(tokenUnitPrice)} / token`
+                      tokensPerDollar > 0
+                        ? `${formatTokenCount(tokensPerDollar)} tokens / $1`
                         : "--"
                     }}
                   </div>
@@ -649,7 +649,7 @@
                     class="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-900"
                   >
                     {{
-                      tokenPurchaseAmount > 0
+                      tokenUnitPrice > 0
                         ? formatCurrency(tokenPurchaseAmount)
                         : "--"
                     }}
@@ -660,7 +660,7 @@
               <button
                 type="button"
                 @click="openPaymentSheet('tokens')"
-                :disabled="billingLoading.tokens || !checkoutReady"
+                :disabled="billingLoading.tokens || !checkoutReady || !canPurchaseTokens"
                 class="mt-4 inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {{ billingLoading.tokens ? "Processing..." : "Open Checkout" }}
@@ -834,8 +834,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from "vue";
-import { useRouter } from "vue-router";
+import { computed, onMounted, reactive, ref, watch, nextTick } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import PaymentSheetModal from "@/components/billing/PaymentSheetModal.vue";
 import type {
   BillingAddressPayload,
@@ -913,7 +913,7 @@ const paymentForm = reactive({
 });
 
 const tokenPurchaseForm = reactive({
-  tokens: 10,
+  tokens: 10000,
 });
 
 const proForm = reactive({
@@ -970,8 +970,26 @@ const currencyCode = computed(() => checkoutConfig.value?.currency || "USD");
 const tokenUnitPrice = computed(() =>
   Number(checkoutCatalog.value?.token_price_per_token || 0),
 );
+const tokensPerDollar = computed(() => {
+  const apiRate = Number(checkoutCatalog.value?.tokens_per_dollar || 0);
+  if (apiRate > 0) {
+    return apiRate;
+  }
+
+  if (tokenUnitPrice.value > 0) {
+    return 1 / tokenUnitPrice.value;
+  }
+
+  return 0;
+});
 const tokenPurchaseAmount = computed(() =>
   roundCurrency(tokenPurchaseForm.tokens * tokenUnitPrice.value),
+);
+const canPurchaseTokens = computed(
+  () =>
+    tokenUnitPrice.value > 0 &&
+    tokenPurchaseForm.tokens >= 10000 &&
+    tokenPurchaseAmount.value > 0,
 );
 const proPrice = computed(() =>
   Number(checkoutCatalog.value?.pro_plan?.price || 0),
@@ -1008,7 +1026,9 @@ const paymentSheetLineTitle = computed(() =>
 const paymentSheetLineDetail = computed(() =>
   paymentSheetMode.value === "pro"
     ? `${proValidityDays.value || "Configured"} day access${proForm.autoRenew ? " • Auto renew on" : ""}`
-    : `${formatCurrency(tokenUnitPrice.value)} per token`,
+    : tokensPerDollar.value > 0
+      ? `${formatTokenCount(tokensPerDollar.value)} tokens / $1 (${formatTokenUnitPrice(tokenUnitPrice.value)} per token)`
+      : `${formatTokenUnitPrice(tokenUnitPrice.value)} per token`,
 );
 const paymentSheetAmountLabel = computed(() =>
   paymentSheetMode.value === "pro"
@@ -1060,6 +1080,28 @@ const formatCurrency = (value: number): string => {
     currency: currencyCode.value,
     maximumFractionDigits: 2,
   }).format(Number.isFinite(value) ? value : 0);
+};
+
+const formatTokenUnitPrice = (value: number): string => {
+  const normalized = Number.isFinite(value) ? value : 0;
+  const microPrice = normalized > 0 && normalized < 0.01;
+
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currencyCode.value,
+    minimumFractionDigits: microPrice ? 4 : 2,
+    maximumFractionDigits: microPrice ? 6 : 2,
+  }).format(normalized);
+};
+
+const formatTokenCount = (value: number): string => {
+  const normalized = Number.isFinite(value) ? value : 0;
+  const isWhole = Math.abs(normalized - Math.round(normalized)) < 0.00001;
+
+  return new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: isWhole ? 0 : 2,
+  }).format(normalized);
 };
 
 const syncBillingStateFromUser = () => {
@@ -1322,8 +1364,8 @@ const handleCreateMachine = async () => {
 const handlePurchaseTokens = async () => {
   clearBillingMessages();
 
-  if (!tokenPurchaseForm.tokens || tokenPurchaseForm.tokens < 1) {
-    billingError.value = "Tokens must be greater than zero.";
+  if (!tokenPurchaseForm.tokens || tokenPurchaseForm.tokens < 10000) {
+    billingError.value = "Minimum token purchase is 10,000.";
     return;
   }
 
@@ -1500,8 +1542,37 @@ onMounted(async () => {
   syncPaymentIdentity();
 
   await Promise.all([loadMachines(), loadBillingCheckout()]);
-});
 
+  // If a hash or query section is provided, scroll to that section
+  const scrollToSection = (sec?: string) => {
+    if (!sec) return;
+    const id = String(sec).replace(/^#/, "");
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 120);
+  };
+
+  // prefer explicit hash, fallback to ?section=...
+  const route = useRoute();
+  if (route.hash) {
+    scrollToSection(route.hash);
+  } else if (route.query && route.query.section) {
+    scrollToSection(String(route.query.section));
+  }
+});
+onMounted(async () => {
+  await nextTick()
+
+  if (window.location.hash) {
+    const el = document.querySelector(window.location.hash)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+})
 const handleLogout = async () => {
   statusMessage.value = "";
   errorMessage.value = "";

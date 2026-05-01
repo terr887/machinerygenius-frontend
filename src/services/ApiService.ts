@@ -62,5 +62,7 @@ export default {
         apiClient.get(`/chat/${sessionId}/history`),
 
     submitContact: (payload: ContactFormPayload) =>
-        apiClient.post<ContactResponse>('/contact', payload)
+        apiClient.post<ContactResponse>('/contact', payload),
+
+    getHomeSections: () => apiClient.get('/home-sections')
 }

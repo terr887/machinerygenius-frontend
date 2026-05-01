@@ -43,6 +43,7 @@ export interface CheckoutGatewayConfig {
 
 export interface CheckoutCatalog {
   token_price_per_token: string;
+  tokens_per_dollar?: string;
   pro_plan: {
     name: string;
     price: string;

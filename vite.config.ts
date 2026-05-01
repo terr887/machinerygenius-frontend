@@ -16,5 +16,14 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
+    
   },
+  // server: {
+  //   host: true,
+  //   origin: 'https://unlegal-uncalcined-reynaldo.ngrok-free.dev',
+  //   hmr: {
+  //     protocol: 'wss',
+  //     host: 'unlegal-uncalcined-reynaldo.ngrok-free.dev',
+  //   },
+  // },
 })
