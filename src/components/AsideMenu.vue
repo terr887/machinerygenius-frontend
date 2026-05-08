@@ -4,7 +4,7 @@
         <div class="px-3 py-4">
             <h2 class="uppercase text-xs font-semibold text-gray-500 tracking-wide mb-3">Navigation</h2>
             <nav class="flex flex-col space-y-1">
-                <RouterLink to="/" class="px-3 py-2 rounded-md transition" active-class="bg-blue-100 text-blue-700">
+                <RouterLink :to="{ name: 'home' }" class="px-3 py-2 rounded-md transition" active-class="bg-blue-100 text-blue-700">
                     Home
                 </RouterLink>
                 <RouterLink to="/features" class="px-3 py-2 rounded-md transition"
@@ -15,6 +15,29 @@
                     active-class="bg-blue-100 text-blue-700">
                     Lathes
                 </RouterLink>
+
+                <div class="rounded-md">
+                    <button type="button" @click="categoriesOpen = !categoriesOpen"
+                        class="flex w-full items-center justify-between rounded-md px-3 py-2 text-left transition hover:bg-gray-100"
+                        :class="isMachineCategoryRoute ? 'bg-blue-100 text-blue-700' : 'text-gray-700'">
+                        <span>Machine Categories</span>
+                        <span class="text-xs" aria-hidden="true">{{ categoriesOpen ? '^' : 'v' }}</span>
+                    </button>
+
+                    <div v-if="categoriesOpen" class="mt-1 space-y-1 border-l border-gray-200 pl-3">
+                        <RouterLink v-for="category in popularCategories" :key="category.id" :to="category.path"
+                            class="block rounded-md px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-100 hover:text-blue-700"
+                            active-class="bg-blue-50 text-blue-700">
+                            {{ category.title }}
+                        </RouterLink>
+
+                        <RouterLink to="/machine-categories"
+                            class="block rounded-md px-3 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-50"
+                            active-class="bg-blue-50">
+                            More Machines ....
+                        </RouterLink>
+                    </div>
+                </div>
 
                 <RouterLink to="/about" class="px-3 py-2 rounded-md transition"
                     active-class="bg-blue-100 text-blue-700">
@@ -113,8 +136,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import {
+    getMachineCategoryPages,
+    type MachineCategoryPage,
+} from "@/services/MachineCategoryPageService";
 
 const garage = ref([
     "AI Help",
@@ -128,4 +156,25 @@ const garage = ref([
 
 const authStore = useAuthStore()
 const isAuthed = computed(() => authStore.isAuthenticated)
+const route = useRoute()
+const machineCategories = ref<MachineCategoryPage[]>([])
+const categoriesOpen = ref(false)
+const isMachineCategoryRoute = computed(() => route.path.startsWith("/machine-categories"))
+const popularCategories = computed(() => machineCategories.value.slice(0, 6))
+
+const fetchMachineCategories = async () => {
+    try {
+        machineCategories.value = await getMachineCategoryPages()
+    } catch (error) {
+        console.error("Failed to fetch machine category pages:", error)
+    }
+}
+
+watch(isMachineCategoryRoute, (active) => {
+    if (active) {
+        categoriesOpen.value = true
+    }
+}, { immediate: true })
+
+onMounted(fetchMachineCategories)
 </script>

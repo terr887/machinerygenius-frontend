@@ -7,7 +7,10 @@ import HomeView from '@/views/HomeView.vue'
 import PrivacyPolicyView from '@/views/PrivacyPolicyView.vue'
 import AboutView from '@/views/AboutView.vue'
 import FeaturesView from '@/views/FeaturesView.vue'
+import FeatureDetailView from '@/views/FeatureDetailView.vue'
 import LathesView from '@/views/LathesView.vue'
+import MachineCategoriesView from '@/views/MachineCategoriesView.vue'
+import MachineCategoryDetailView from '@/views/MachineCategoryDetailView.vue'
 import ContactView from '@/views/ContactView.vue'
 import ThankyouView from '@/views/ThankyouView.vue'
 import FeedbackView from '@/views/FeedbackView.vue'
@@ -50,9 +53,24 @@ const router = createRouter({
       component: FeaturesView,
     },
     {
+      path: '/features/:slug',
+      name: 'feature-detail',
+      component: FeatureDetailView,
+    },
+    {
       path: '/lathes',
       name: 'lathes',
       component: LathesView,
+    },
+    {
+      path: '/machine-categories',
+      name: 'machine-categories',
+      component: MachineCategoriesView,
+    },
+    {
+      path: '/machine-categories/:slug',
+      name: 'machine-category-detail',
+      component: MachineCategoryDetailView,
     },
     {
       path: '/about',

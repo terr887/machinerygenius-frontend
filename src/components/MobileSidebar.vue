@@ -28,7 +28,7 @@
             <div class="px-3 py-4">
                 <h2 class="uppercase text-xs font-semibold text-gray-500 tracking-wide mb-3">Navigation</h2>
                 <nav class="flex flex-col space-y-1">
-                    <RouterLink to="/" class="px-3 py-2 rounded-md transition" active-class="bg-blue-100 text-blue-700">
+                    <RouterLink :to="{ name: 'home' }" class="px-3 py-2 rounded-md transition" active-class="bg-blue-100 text-blue-700">
                         Home
                     </RouterLink>
 
