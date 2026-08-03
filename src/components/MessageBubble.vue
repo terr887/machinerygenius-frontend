@@ -3,7 +3,7 @@
     :aria-label="isUser ? 'User message' : 'Assistant message'">
     <MessageAvatar :isUser="isUser" />
 
-    <div class="flex-1">
+    <div class="min-w-0 flex-1">
       <Bubble :message="message" :isUser="isUser">
         <template #more_context>
           <div class="mb-3 py-2 px-1 bg-yellow-50 rounded-lg" aria-live="polite" v-if="message.need_more_context">
@@ -21,7 +21,7 @@
           <RelatedModels :models="message.related_models" />
 
           <!-- show need_more_context hint and followups -->
-          <FollowUpGroup :questions="message.followup_questions" />
+          <FollowUpGroup :questions="message.followup_questions" @select="$emit('follow-up-select', $event)" />
         </template>
       </Bubble>
     </div>
@@ -40,6 +40,8 @@ const props = defineProps({
   message: { type: Object, required: true },
   isUser: { type: Boolean, default: false }
 })
+
+defineEmits(['follow-up-select'])
 </script>
 
 <style scoped>

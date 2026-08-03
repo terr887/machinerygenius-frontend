@@ -26,12 +26,6 @@
                         title="Temporarily dismiss this banner">
                         Dismiss
                     </button>
-
-                    <button @click="neverShowAgain"
-                        class="text-xs px-2 py-1 rounded hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-yellow-300"
-                        title="Stop showing this notice on future visits">
-                        Never show again
-                    </button>
                 </div>
             </div>
 
@@ -54,16 +48,7 @@ import { ref } from 'vue'
 
 const showSafety = ref(true)
 
-if (localStorage.getItem('safetyNoticeNeverShow') === 'true') {
-    showSafety.value = false
-}
-
 const dismissSafety = () => {
-    showSafety.value = false
-}
-
-const neverShowAgain = () => {
-    localStorage.setItem('safetyNoticeNeverShow', 'true')
     showSafety.value = false
 }
 </script>

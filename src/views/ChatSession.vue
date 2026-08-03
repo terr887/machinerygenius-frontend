@@ -1,6 +1,6 @@
 <template>
   <!-- make the page relative so absolute elements (scroll button) position correctly -->
-  <div ref="pageRef" class="chat-session w-full mx-auto relative flex-1 flex flex-col bg-gray-50 min-h-0 h-full">
+  <div ref="pageRef" class="chat-session w-full mx-auto relative flex-1 flex flex-col bg-gray-50 min-h-0 h-full overflow-x-hidden">
     <!-- LOADING OVERLAY (shows while chat history loads) -->
     <div v-if="isLoading" class="absolute inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
       aria-hidden="false" role="status" aria-live="polite">
@@ -107,7 +107,8 @@
           </div>
         </div>
 
-        <MessageBubble v-for="msg in messages" :key="msg.id" :message="msg" :isUser="msg.isUser" />
+        <MessageBubble v-for="msg in messages" :key="msg.id" :message="msg" :isUser="msg.isUser"
+          @follow-up-select="handleFollowUpSelect" />
 
 
         <!-- WhatsApp-style typing dots (compact on mobile) -->
@@ -176,21 +177,35 @@
       <!-- Disclaimer Section -->
       <div class="border-t border-gray-200 bg-yellow-50">
         <div
-          class="mx-auto w-full max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl px-3 py-2 text-[11px] sm:text-xs text-yellow-900 leading-snug">
-          <strong>Disclaimer:</strong>
-          All information provided through this service is for general informational purposes only and does not
-          constitute professional, legal, or technical advice. Users are solely responsible for evaluating and
-          confirming the accuracy, applicability, and safety of any guidance or instructions before use. Always follow
-          manufacturer documentation and applicable safety regulations. MachineryGenius.com and its affiliates disclaim
-          any liability for injuries, damages, or losses arising from the use of this platform. <strong>Use at your own
-            risk.</strong>
+          class="mx-auto w-full max-w-full px-3 py-1.5 text-[11px] leading-snug text-yellow-900 sm:max-w-2xl sm:py-2 sm:text-xs md:max-w-3xl lg:max-w-4xl">
+          <details class="mobile-disclaimer sm:hidden">
+            <summary class="cursor-pointer select-none font-semibold">
+              Disclaimer: verify all guidance before use.
+            </summary>
+            <p class="mt-1">
+              All information provided through this service is for general informational purposes only and does not
+              constitute professional, legal, or technical advice. Always follow manufacturer documentation and
+              applicable safety regulations. MachineryGenius.com and its affiliates disclaim any liability for injuries,
+              damages, or losses arising from the use of this platform. <strong>Use at your own risk.</strong>
+            </p>
+          </details>
+
+          <div class="hidden sm:block">
+            <strong>Disclaimer:</strong>
+            All information provided through this service is for general informational purposes only and does not
+            constitute professional, legal, or technical advice. Users are solely responsible for evaluating and
+            confirming the accuracy, applicability, and safety of any guidance or instructions before use. Always follow
+            manufacturer documentation and applicable safety regulations. MachineryGenius.com and its affiliates disclaim
+            any liability for injuries, damages, or losses arising from the use of this platform. <strong>Use at your own
+              risk.</strong>
+          </div>
         </div>
       </div>
 
       <!-- Chat Input -->
-      <div class="px-3 py-3 sm:px-4 sm:py-4 sm:pt-0 pt-0">
-        <ChatInput :allowFileUpload="false" :is-loading="isLoading" :auto-focus="true"
-          @send-message="handleSendMessage" :value="inputMessage" />
+      <div class="px-3 py-2 pt-0 sm:px-4 sm:py-3 sm:pt-0">
+        <ChatInput ref="chatInputRef" :allowFileUpload="false" :is-loading="isLoading" :auto-focus="true"
+          @send-message="handleSendMessage" :value="inputMessage" :compact="true" />
       </div>
     </div>
   </div>
@@ -211,7 +226,15 @@ const router = useRouter()
 const route = useRoute()
 const sessionId = ref(route.params.session)
 const inputMessage = ref('')
+const chatInputRef = ref(null)
 const authStore = useAuthStore()
+
+const handleFollowUpSelect = (question) => {
+  inputMessage.value = question
+  nextTick(() => {
+    chatInputRef.value?.focus?.()
+  })
+}
 
 const { api, machine } = useServices()
 
@@ -227,7 +250,8 @@ const showScrollButton = ref(false) // derived UI - we show button only when use
 
 const showSavePanel = ref(false)
 const showUpgradePrompt = ref(false)
-const usageMinimized = ref(false)
+const isMobileViewport = () => typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches
+const usageMinimized = ref(isMobileViewport())
 const showQuestionLimitModal = ref(false)
 const questionLimitTitle = ref('Question Limit Reached')
 const questionLimitMessage = ref('You have used your free questions. Purchase tokens or upgrade your plan to continue asking questions.')
@@ -495,6 +519,14 @@ const handleScrollToBottom = () => {
 }
 
 let footerObserver = null
+let usageMediaQuery = null
+const syncUsageDefaultForViewport = (event = null) => {
+  const isMobile = event?.matches ?? isMobileViewport()
+  if (isMobile) {
+    usageMinimized.value = true
+  }
+}
+
 const updateFooterHeight = () => {
   const pageEl = pageRef.value
   const footerEl = footerRef.value
@@ -504,6 +536,9 @@ const updateFooterHeight = () => {
 
 onMounted(async () => {
   const pendingQuestion = sessionStorage.getItem('pendingQuestion')
+  syncUsageDefaultForViewport()
+  usageMediaQuery = window.matchMedia('(max-width: 639px)')
+  usageMediaQuery.addEventListener('change', syncUsageDefaultForViewport)
 
   await loadMachines()
 
@@ -583,6 +618,10 @@ onBeforeUnmount(() => {
     footerObserver.disconnect()
     footerObserver = null
   }
+  if (usageMediaQuery) {
+    usageMediaQuery.removeEventListener('change', syncUsageDefaultForViewport)
+    usageMediaQuery = null
+  }
   // cleanup polling/listeners
   try {
     const holder = (pageRef.value || window)._mg_poll
@@ -600,20 +639,59 @@ onBeforeUnmount(() => {
 <style scoped>
 .chat-session {
   --chat-footer-height: 140px;
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .messages-scroll {
-  padding-bottom: calc(var(--chat-footer-height) + 12px);
-  scroll-padding-bottom: calc(var(--chat-footer-height) + 12px);
+  padding-bottom: 12px;
+  scroll-padding-bottom: 12px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  overflow-x: hidden;
+}
+
+.messages-scroll > div {
+  min-width: 0;
+  width: 100%;
 }
 
 .chat-footer {
-  position: sticky;
+  position: relative;
   bottom: 0;
+  flex-shrink: 0;
   z-index: 30;
   background: rgba(249, 250, 251, 0.95);
   backdrop-filter: blur(6px);
   box-shadow: 0 -10px 24px rgba(18, 20, 25, 0.06);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.mobile-disclaimer summary::-webkit-details-marker {
+  display: none;
+}
+
+.mobile-disclaimer summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.mobile-disclaimer summary::after {
+  content: "View";
+  flex-shrink: 0;
+  color: #92400e;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.mobile-disclaimer[open] summary::after {
+  content: "Hide";
 }
 
 /* smaller dots for mobile, scale slightly on larger screens */
