@@ -8,6 +8,9 @@ export type FeaturePage = {
   workflows: string[]
   ctaText: string
   ctaLink: string
+  metaTitle?: string
+  metaDescription?: string
+  metaKeywords?: string
 }
 
 type CmsFeatureItem = {
@@ -22,6 +25,9 @@ type CmsFeatureItem = {
   page_workflows?: string[]
   page_cta_text?: string
   page_cta_link?: string
+  meta_title?: string
+  meta_description?: string
+  meta_keywords?: string
 }
 
 type CmsHomeSection = {
@@ -276,6 +282,9 @@ export const featurePageFromCmsItem = (item: CmsFeatureItem): FeaturePage | unde
     workflows: Array.isArray(item.page_workflows) && item.page_workflows.length ? item.page_workflows : fallback?.workflows || [],
     ctaText: item.page_cta_text || fallback?.ctaText || 'Get Started',
     ctaLink: item.page_cta_link || fallback?.ctaLink || '/app',
+    metaTitle: item.meta_title || fallback?.metaTitle,
+    metaDescription: item.meta_description || fallback?.metaDescription || item.page_summary || description,
+    metaKeywords: item.meta_keywords || fallback?.metaKeywords,
   }
 }
 

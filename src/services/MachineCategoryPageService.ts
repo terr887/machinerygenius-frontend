@@ -1,4 +1,4 @@
-import api from "@/services/ApiService";
+import { getSections } from "@/utils/sectionsStore";
 
 export interface CmsSection<TData = Record<string, unknown>> {
     id: number | string;
@@ -13,6 +13,7 @@ export interface MachineCategoryData {
     content?: string;
     meta_title?: string;
     meta_description?: string;
+    meta_keywords?: string;
 }
 
 export interface MachineCategoryPage {
@@ -24,6 +25,7 @@ export interface MachineCategoryPage {
     content: string;
     metaTitle?: string;
     metaDescription?: string;
+    metaKeywords?: string;
 }
 
 export const machineCategoryLabels: Record<string, string> = {
@@ -48,12 +50,29 @@ const slugify = (value: string) =>
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-+|-+$/g, "");
 
+const trimCommonTitlePrefix = (value: string) => {
+    const normalized = value.trim();
+
+    if (!normalized) {
+        return "";
+    }
+
+    return normalized
+        .replace(
+            /^(?:machinery\s*genius(?:\s*ai)?|machine\s*categories?|machine\s*category|category)\s*[:\-–—|]+\s*/i,
+            ""
+        )
+        .replace(/^(?:machinery\s*genius(?:\s*ai)?|machine\s*categories?|machine\s*category|category)\s+/i, "")
+        .trim();
+};
+
 export const normalizeMachineCategoryPage = (
     section: CmsSection<MachineCategoryData>
 ): MachineCategoryPage | null => {
     const data = section.data || {};
     const category = data.category?.trim();
-    const title = data.title?.trim() || (category ? machineCategoryLabels[category] : "");
+    const rawTitle = data.title?.trim() || (category ? machineCategoryLabels[category] : "");
+    const title = trimCommonTitlePrefix(rawTitle) || rawTitle;
 
     if (!category || !title) {
         return null;
@@ -74,15 +93,16 @@ export const normalizeMachineCategoryPage = (
         content: data.content || "",
         metaTitle: data.meta_title || undefined,
         metaDescription: data.meta_description || undefined,
+        metaKeywords: data.meta_keywords || undefined,
     };
 };
 
 export const getMachineCategoryPages = async (): Promise<MachineCategoryPage[]> => {
-    const response = await api.getHomeSections();
-    const sections = Array.isArray(response.data?.data) ? response.data.data : [];
+    const sections = (await getSections()) as CmsSection<MachineCategoryData>[];
 
     return sections
-        .filter((section: CmsSection<MachineCategoryData>) => section.type === "machine_categories")
-        .map((section: CmsSection<MachineCategoryData>) => normalizeMachineCategoryPage(section))
-        .filter((page: MachineCategoryPage | null): page is MachineCategoryPage => Boolean(page));
+        .filter((section) => section.type === "machine_categories")
+        .map((section) => normalizeMachineCategoryPage(section))
+        .filter((page): page is MachineCategoryPage => Boolean(page))
+        .sort((a, b) => a.title.localeCompare(b.title));
 };

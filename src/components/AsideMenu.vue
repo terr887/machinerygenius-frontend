@@ -7,13 +7,9 @@
                 <RouterLink :to="{ name: 'home' }" class="px-3 py-2 rounded-md transition" active-class="bg-blue-100 text-blue-700">
                     Home
                 </RouterLink>
-                <RouterLink to="/features" class="px-3 py-2 rounded-md transition"
+                <RouterLink to="/contact" class="px-3 py-2 rounded-md transition"
                     active-class="bg-blue-100 text-blue-700">
-                    Features
-                </RouterLink>
-                 <RouterLink to="/lathes" class="px-3 py-2 rounded-md transition"
-                    active-class="bg-blue-100 text-blue-700">
-                    Lathes
+                    Contact Us
                 </RouterLink>
 
                 <div class="rounded-md">
@@ -39,15 +35,35 @@
                     </div>
                 </div>
 
-                <RouterLink to="/about" class="px-3 py-2 rounded-md transition"
+                <div class="rounded-md mt-3">
+                    <button type="button" @click="manufacturersOpen = !manufacturersOpen"
+                        class="flex w-full items-center justify-between rounded-md px-3 py-2 text-left transition hover:bg-gray-100"
+                        :class="isManufacturerRoute ? 'bg-blue-100 text-blue-700' : 'text-gray-700'">
+                        <span>Manufacturers</span>
+                        <span class="text-xs" aria-hidden="true">{{ manufacturersOpen ? '^' : 'v' }}</span>
+                    </button>
+
+                    <div v-if="manufacturersOpen" class="mt-1 space-y-1 border-l border-gray-200 pl-3">
+                        <RouterLink v-for="m in popularManufacturers" :key="m.id" :to="m.path"
+                            class="block rounded-md px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-100 hover:text-blue-700"
+                            active-class="bg-blue-50 text-blue-700">
+                            {{ m.title }}
+                        </RouterLink>
+
+                        <RouterLink to="/manufacturers"
+                            class="block rounded-md px-3 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-50"
+                            active-class="bg-blue-50">
+                            More Manufacturers ....
+                        </RouterLink>
+                    </div>
+                </div>
+
+                <RouterLink to="/about-us" class="px-3 py-2 rounded-md transition"
                     active-class="bg-blue-100 text-blue-700">
                     About
                 </RouterLink>
 
-                <RouterLink to="/contact" class="px-3 py-2 rounded-md transition"
-                    active-class="bg-blue-100 text-blue-700">
-                    Contact Us
-                </RouterLink>
+
 
                 <RouterLink to="/feedback" class="px-3 py-2 rounded-md transition"
                     active-class="bg-blue-100 text-blue-700">
@@ -109,13 +125,27 @@
         <!-- Utility Card -->
         <div class="px-3 py-4">
             <div class="border border-blue-100 bg-blue-50 p-4 rounded-lg">
-                <h3 class="font-semibold text-sm text-blue-900">My Machine Garage™</h3>
-                <p class="text-xs text-gray-600 mt-2 leading-relaxed">
-                    Register your machine serials and model numbers to track manuals,
-                    maintenance, and parts.
-                </p>
+                <button type="button" @click="viewSavedMachines" class="w-full cursor-pointer text-left">
+                    <h3 class="font-semibold text-sm text-blue-900">My Machine Garage™</h3>
+                    <p class="text-xs text-gray-600 mt-2 leading-relaxed">
+                        Register your machine serials and model numbers to track manuals,
+                        maintenance, and parts.
+                    </p>
+                </button>
+                <div class="mt-3 flex items-center gap-4 border-t border-blue-100 pt-3 text-xs font-semibold">
+                    <button type="button" @click="openAddMachine"
+                        class="cursor-pointer text-blue-700 transition hover:text-blue-900">
+                        + Add a Machine
+                    </button>
+                    <button type="button" @click="viewSavedMachines"
+                        class="cursor-pointer text-blue-700 transition hover:text-blue-900">
+                        View Saved Machines →
+                    </button>
+                </div>
             </div>
         </div>
+
+        <AddMachineModal :open="showAddMachineModal" @close="showAddMachineModal = false" />
 
         <!-- Quick Actions -->
         <div class="px-3 py-4">
@@ -137,12 +167,17 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import {
     getMachineCategoryPages,
     type MachineCategoryPage,
 } from "@/services/MachineCategoryPageService";
+import {
+    getManufacturerPages,
+    type ManufacturerPage,
+} from "@/services/ManufacturerPageService";
+import AddMachineModal from "@/components/machine/AddMachineModal.vue";
 
 const garage = ref([
     "AI Help",
@@ -157,10 +192,34 @@ const garage = ref([
 const authStore = useAuthStore()
 const isAuthed = computed(() => authStore.isAuthenticated)
 const route = useRoute()
+const router = useRouter()
+
+const showAddMachineModal = ref(false)
+
+const openAddMachine = () => {
+    if (!isAuthed.value) {
+        router.push({ name: 'login', query: { redirect: route.fullPath } })
+        return
+    }
+    showAddMachineModal.value = true
+}
+
+const viewSavedMachines = () => {
+    if (!isAuthed.value) {
+        router.push({ name: 'login', query: { redirect: '/account#machines' } })
+        return
+    }
+    router.push({ path: '/account', hash: '#machines' })
+}
 const machineCategories = ref<MachineCategoryPage[]>([])
 const categoriesOpen = ref(false)
 const isMachineCategoryRoute = computed(() => route.path.startsWith("/machine-categories"))
 const popularCategories = computed(() => machineCategories.value.slice(0, 6))
+
+const manufacturers = ref<ManufacturerPage[]>([])
+const manufacturersOpen = ref(false)
+const isManufacturerRoute = computed(() => route.path.startsWith("/manufacturers"))
+const popularManufacturers = computed(() => manufacturers.value.slice(0, 6))
 
 const fetchMachineCategories = async () => {
     try {
@@ -170,11 +229,35 @@ const fetchMachineCategories = async () => {
     }
 }
 
+const fetchManufacturerPages = async () => {
+    try {
+        manufacturers.value = await getManufacturerPages()
+    } catch (error) {
+        console.error("Failed to fetch manufacturer pages:", error)
+    }
+}
+
 watch(isMachineCategoryRoute, (active) => {
     if (active) {
         categoriesOpen.value = true
     }
 }, { immediate: true })
 
-onMounted(fetchMachineCategories)
+watch(isManufacturerRoute, (active) => {
+    if (active) {
+        manufacturersOpen.value = true
+    }
+}, { immediate: true })
+
+onMounted(() => {
+    // Defer until after first paint so main content renders without competition
+    const schedule = (fn: () => void) =>
+        'requestIdleCallback' in window
+            ? (window as any).requestIdleCallback(fn, { timeout: 3000 })
+            : setTimeout(fn, 50)
+    schedule(() => {
+        fetchMachineCategories()
+        fetchManufacturerPages()
+    })
+})
 </script>

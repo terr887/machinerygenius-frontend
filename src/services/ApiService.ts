@@ -37,9 +37,12 @@ apiClient.interceptors.request.use((config) => {
 })
 
 export default {
-    createChat: (message: string) => {
+    createChat: (message: string, machineId?: number | string | null) => {
         const formData = new URLSearchParams()
         formData.append('question', message)
+        if (machineId) {
+            formData.append('machine_id', String(machineId))
+        }
 
         return apiClient.post(`/chat/new`, formData, {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }

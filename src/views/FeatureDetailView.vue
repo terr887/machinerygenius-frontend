@@ -72,17 +72,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useServices } from '@/services/container'
+import { getSections } from '@/utils/sectionsStore'
 import {
   getFeaturePageBySlug,
   getFeaturePageFromHomeSections,
   type FeaturePage,
 } from '@/services/FeaturePageService'
+import { resetPageMeta, setPageMeta } from '@/utils/head'
 
 const route = useRoute()
-const { api } = useServices()
 const cmsFeature = ref<FeaturePage | undefined>()
 const loading = ref(false)
 
@@ -106,9 +106,8 @@ const fetchFeature = async () => {
   loading.value = true
 
   try {
-    const response = await api.getHomeSections()
-    const sections = Array.isArray(response.data?.data) ? response.data.data : []
-    cmsFeature.value = getFeaturePageFromHomeSections(sections, slug.value)
+    const sections = await getSections()
+    cmsFeature.value = getFeaturePageFromHomeSections(sections as Parameters<typeof getFeaturePageFromHomeSections>[0], slug.value)
   } catch (error) {
     console.error('Failed to fetch feature page:', error)
   } finally {
@@ -117,4 +116,28 @@ const fetchFeature = async () => {
 }
 
 watch(slug, fetchFeature, { immediate: true })
+watch(
+  [feature, loading],
+  ([currentFeature, isLoading]) => {
+    if (isLoading) {
+      return
+    }
+
+    if (!currentFeature) {
+      setPageMeta({
+        title: 'Feature Not Found | Machinery Genius',
+        description: 'The feature page you requested is not available.',
+      })
+      return
+    }
+
+    setPageMeta({
+      title: currentFeature.metaTitle || `${currentFeature.title} | Machinery Genius`,
+      description: currentFeature.metaDescription || currentFeature.summary,
+      keywords: currentFeature.metaKeywords,
+    })
+  },
+  { immediate: true }
+)
+onBeforeUnmount(resetPageMeta)
 </script>

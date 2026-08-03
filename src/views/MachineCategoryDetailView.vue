@@ -54,13 +54,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import {
   getMachineCategoryPages,
   machineCategoryLabels,
   type MachineCategoryPage,
 } from "@/services/MachineCategoryPageService";
+import { resetPageMeta, setPageMeta } from "@/utils/head";
 
 const route = useRoute();
 const category = ref<MachineCategoryPage | null>(null);
@@ -84,4 +85,28 @@ const fetchCategory = async () => {
 
 onMounted(fetchCategory);
 watch(slug, fetchCategory);
+watch(
+  [category, loading],
+  ([currentCategory, isLoading]) => {
+    if (isLoading) {
+      return;
+    }
+
+    if (!currentCategory) {
+      setPageMeta({
+        title: "Machine Category Not Found | Machinery Genius",
+        description: "This machine category is not published in the Machinery Genius CMS.",
+      });
+      return;
+    }
+
+    setPageMeta({
+      title: currentCategory.metaTitle || `${currentCategory.title} | Machinery Genius`,
+      description: currentCategory.metaDescription,
+      keywords: currentCategory.metaKeywords,
+    });
+  },
+  { immediate: true }
+);
+onBeforeUnmount(resetPageMeta);
 </script>

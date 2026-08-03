@@ -1,5 +1,5 @@
 <template>
-  <div :class="['p-4 bg-gray-50', hasTopBorder ? 'border-t border-gray-200' : null]">
+  <div :class="[compact ? 'p-0 bg-transparent' : 'p-4 bg-gray-50', hasTopBorder ? 'border-t border-gray-200' : null]">
     <div class="max-w-4xl mx-auto">
       <div class="relative bg-white rounded-lg">
         <!-- File Upload Button -->
@@ -137,6 +137,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  compact: {
+    type: Boolean,
+    default: false
+  },
   typingText: {
     type: String,
     default: 'Bot is typing...'
@@ -238,4 +242,8 @@ if (props.autoFocus) {
     inputBoxRef.value?.focus()
   })
 }
+
+defineExpose({
+  focus: () => inputBoxRef.value?.focus()
+})
 </script>

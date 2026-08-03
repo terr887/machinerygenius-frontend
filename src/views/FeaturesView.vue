@@ -123,7 +123,7 @@
           </p>
           <div class="flex gap-2">
             <button type="submit" class="px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">Send Message</button>
-            <a href="/pricing" class="px-4 py-2 text-sm font-semibold text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">View Pricing</a>
+            <RouterLink to="/pricing" class="px-4 py-2 text-sm font-semibold text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">View Pricing</RouterLink>
           </div>
         </div>
       </form>

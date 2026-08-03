@@ -502,6 +502,27 @@
                       Year: {{ item.year }}
                     </span>
                   </div>
+
+                  <div class="mt-3 flex flex-wrap items-center gap-4">
+                    <RouterLink
+                      :to="{
+                        name: 'app',
+                        query: {
+                          machine_id: String(item.id),
+                          machine_label: item.nickname || `${item.brand} ${item.model}`
+                        }
+                      }"
+                      class="inline-flex items-center text-xs font-semibold text-blue-600 hover:text-blue-700"
+                    >
+                      Chat about this machine →
+                    </RouterLink>
+                    <RouterLink
+                      :to="{ name: 'machine-detail', params: { id: item.qr_uuid } }"
+                      class="inline-flex items-center text-xs font-semibold text-slate-600 hover:text-slate-800"
+                    >
+                      Open Garage Profile →
+                    </RouterLink>
+                  </div>
                 </div>
               </div>
             </div>

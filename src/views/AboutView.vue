@@ -188,8 +188,8 @@
       Have reputable sources or datasets that can strengthen the industry? Share them with us to help train and improve Machinery Genius™ for everyone.
     </p>
     <div class="flex gap-2">
-      <a href="#" class="px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">Suggest a Source</a>
-      <a href="#" class="px-4 py-2 text-sm font-semibold text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">Become an OEM Partner</a>
+      <RouterLink to="/contact" class="px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">Suggest a Source</RouterLink>
+      <RouterLink to="/register" class="px-4 py-2 text-sm font-semibold text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">Become an OEM Partner</RouterLink>
     </div>
   </div>
 </div>

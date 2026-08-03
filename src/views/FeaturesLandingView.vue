@@ -22,28 +22,18 @@
   </div>
 
 
-  <!-- Static Footer -->
-  <footer class="bg-gray-900 text-gray-300 text-center rounded-xl p-5 text-xs">
-    <p>© 2025 Machinery Genius LLC.</p>
-    <p class="mt-2">
-      All information is provided for reference. Always verify critical details with the original manufacturer.
-      <a href="/disclaimer.html" class="text-blue-400 hover:underline ml-1">Disclaimer</a>
-    </p>
-  </footer>
 </div>
 </template>
 
 <script setup>
 import { ref, onMounted, markRaw } from 'vue'
-import { useServices } from '@/services/container'
+import { getSections } from '@/utils/sectionsStore'
 
 // Import dynamic components
 import HeroSection from '@/components/HomeSections/HeroSection.vue'
 import FeaturesSection from '@/components/HomeSections/FeaturesSection.vue'
 import CtaSection from '@/components/HomeSections/CtaSection.vue'
 import TrustedOemsSection from '@/components/HomeSections/TrustedOemsSection.vue'
-
-const { api } = useServices()
 const sections = ref([])
 const loading = ref(true)
 
@@ -54,6 +44,7 @@ const componentMap = {
   trusted_oems: markRaw(TrustedOemsSection),
 }
 const homeSectionTypes = Object.keys(componentMap)
+const featurePageSectionType = 'feature_page'
 const fallbackSections = [
   {
     id: 'fallback-hero',
@@ -121,13 +112,46 @@ const getComponent = (type) => {
   return componentMap[type] || null
 }
 
+const buildFeaturesSectionFromPages = (sections) => {
+  const featurePages = sections
+    .filter((section) => section.type === featurePageSectionType && section.is_active !== false && section.data)
+    .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+    .map((section) => section.data)
+
+  if (!featurePages.length) {
+    return null
+  }
+
+  return {
+    id: 'cms-feature-pages',
+    type: 'features',
+    sort_order: 2,
+    data: {
+      title: 'What Machinery Genius Can Do',
+      items: featurePages,
+    },
+  }
+}
+
+const normalizeHomeSections = (cmsSections) => {
+  const activeSections = cmsSections.filter((section) => section.is_active !== false)
+  const displaySections = activeSections.filter((section) => homeSectionTypes.includes(section.type))
+
+  if (!displaySections.some((section) => section.type === 'features')) {
+    const generatedFeaturesSection = buildFeaturesSectionFromPages(activeSections)
+
+    if (generatedFeaturesSection) {
+      displaySections.push(generatedFeaturesSection)
+    }
+  }
+
+  return displaySections.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+}
+
 const fetchSections = async () => {
   try {
-    const res = await api.getHomeSections()
-    if (res.data.success) {
-      const cmsSections = Array.isArray(res.data.data) ? res.data.data : []
-      sections.value = cmsSections.filter((section) => homeSectionTypes.includes(section.type))
-    }
+    const cmsSections = await getSections()
+    sections.value = normalizeHomeSections(cmsSections)
   } catch (error) {
     console.error('Failed to fetch home sections:', error)
   } finally {

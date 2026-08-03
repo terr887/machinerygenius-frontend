@@ -48,6 +48,23 @@
     />
     <meta name="apple-mobile-web-app-title" content="Machinery Genius AI" />
     <link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+    <!-- Preconnect to API domain so DNS + TCP are ready before JS fires -->
+    <link rel="preconnect" href="https://dashboard.machinerygenius.com" />
+    <link rel="dns-prefetch" href="https://dashboard.machinerygenius.com" />
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0RX4HEM3ZF"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-0RX4HEM3ZF");
+    </script>
     <script
       type="text/javascript"
       src="https://js.authorize.net/v1/Accept.js"

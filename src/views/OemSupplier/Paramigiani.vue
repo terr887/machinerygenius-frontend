@@ -36,10 +36,10 @@
                                 class="bg-gradient-to-r from-blue-600 to-blue-500 px-3 py-2 bg-blue-600 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">
                                 AskAI: Parmigiani Support
                             </a>
-                            <a href="#register"
+                            <RouterLink to="/register"
                                 class="px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">
                                 Register Your Machine
-                            </a>
+                            </RouterLink>
                             <a href="#parts"
                                 class="px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">
                                 Find Parts &amp; Repair Techs
@@ -378,10 +378,10 @@
                         <p class="mt-2 text-gray-700">Get recalls & safety notices, product updates, and trade-in
                             options.</p>
                         <div class="mt-3">
-                            <a href="#"
-                                class="px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">
+                            <RouterLink to="/register"
+                                class="inline-block px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">
                                 Register Your Machine
-                            </a>
+                            </RouterLink>
                         </div>
                         <div class="mt-4" id="sell">
                             <h4 class="font-semibold">Sell or Trade Your Machine</h4>
@@ -434,10 +434,10 @@
                         <a href="https://www.carellcorp.com" target="_blank" rel="noopener"
                             class="px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">Contact
                             OEM Manufacturer</a>
-                        <a href="#register"
+                        <RouterLink to="/register"
                             class="px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200">Register
                             Your
-                            Machine</a>
+                            Machine</RouterLink>
                     </div>
                     <p class="note mt-2">T 251.937.0947 • F 251.937.4742 • PO Box 99, 34225 US Hwy. 31, Stapleton, AL
                         36578 • Web: carellcorp.com</p>
