@@ -39,11 +39,6 @@ const router = createRouter({
       component: () => import('@/views/FeatureDetailView.vue'),
     },
     {
-      path: '/features/:slug',
-      name: 'feature-detail',
-      component: FeatureDetailView,
-    },
-    {
       path: '/lathes',
       name: 'lathes',
       component: () => import('@/views/LathesView.vue'),
@@ -57,16 +52,6 @@ const router = createRouter({
       path: '/machine-categories/:slug',
       name: 'machine-category-detail',
       component: () => import('@/views/MachineCategoryDetailView.vue'),
-    },
-    {
-      path: '/machine-categories',
-      name: 'machine-categories',
-      component: MachineCategoriesView,
-    },
-    {
-      path: '/machine-categories/:slug',
-      name: 'machine-category-detail',
-      component: MachineCategoryDetailView,
     },
     {
       path: '/about',
