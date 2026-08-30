@@ -17,6 +17,12 @@ const router = createRouter({
       meta: { requiresAuth: true, chatLayout: true },
     },
     {
+      path: '/will-it-fit',
+      name: 'will-it-fit',
+      component: () => import('@/views/WillItFitView.vue'),
+      meta: { requiresAuth: true, hideSidebar: true, hideFooter: true },
+    },
+    {
       path: '/c/:session',
       name: 'chat-session',
       component: () => import('@/views/ChatSession.vue'),
