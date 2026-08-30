@@ -18,6 +18,8 @@ export interface WillItFitRepresentation {
     height_in: number
     weight_lb: number | null
     dimensions_status: string | null
+    floor_locked: boolean
+    floor_alignment: 'geometry_y_zero' | 'bounding_box_bottom'
     expires_at: string | null
 }
 
