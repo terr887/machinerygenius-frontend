@@ -52,6 +52,13 @@
     <!-- Preconnect to API domain so DNS + TCP are ready before JS fires -->
     <link rel="preconnect" href="https://dashboard.machinerygenius.com" />
     <link rel="dns-prefetch" href="https://dashboard.machinerygenius.com" />
+
+    <!-- Mobile 3D + AR viewer used by Will It Fit. Pinned for repeatable builds. -->
+    <script
+      type="module"
+      src="https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js"
+    ></script>
+
     <!-- Google tag (gtag.js) -->
     <script
       async

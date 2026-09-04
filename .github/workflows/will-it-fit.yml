@@ -1,0 +1,43 @@
+name: Will It Fit frontend checks
+
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'src/router/index.ts'
+      - 'src/services/MachineService.ts'
+      - 'src/services/WillItFitService.ts'
+      - 'src/views/WillItFitView.vue'
+      - 'src/views/HomeView.vue'
+      - 'vite.config.ts'
+      - '.github/workflows/will-it-fit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check Vue and TypeScript
+        run: npm run type-check
+
+      - name: Build production assets
+        env:
+          VITE_API_URL: https://staging.example.test/api
+        run: npm run build-only

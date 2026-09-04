@@ -11,6 +11,15 @@ export interface Machine {
     location: string | null
     tier_access: string | null
     qr_uuid: string | null
+    overall_width_in?: number | null
+    overall_depth_in?: number | null
+    overall_height_in?: number | null
+    weight_lb?: number | null
+    dimensions_status?: string | null
+    dimensions_source?: string | null
+    ar_model_glb_url?: string | null
+    ar_model_usdz_url?: string | null
+    ar_representation_type?: string | null
     manuals?: ManualSummary[]
     photos?: MachinePhoto[]
     notes?: MachineNote[]
@@ -26,6 +35,12 @@ export interface MachinePayload {
     serial?: string
     year?: number | null
     location?: string
+    overall_width_in?: number | null
+    overall_depth_in?: number | null
+    overall_height_in?: number | null
+    weight_lb?: number | null
+    dimensions_status?: string | null
+    dimensions_source?: string | null
 }
 
 export interface ManualSummary {
