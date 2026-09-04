@@ -16,9 +16,23 @@
           <h2 class="mb-2 mt-4 text-lg font-semibold text-gray-900 sm:mt-6 sm:text-xl">
             Hi, I am Machinery Genius
           </h2>
-          <p class="mb-4 text-sm text-gray-600 sm:mb-6 sm:text-base">
+          <p class="mb-4 text-sm text-gray-600 sm:mb-5 sm:text-base">
             AI-powered support — Visual diagnostic, manuals, maintenance tracking, part sourcing, and more.
           </p>
+
+          <RouterLink
+            to="/will-it-fit"
+            class="mx-auto mb-4 flex w-full max-w-xl items-center gap-4 rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-700 to-slate-900 px-4 py-4 text-left text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl sm:mb-6"
+          >
+            <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-yellow-400 text-2xl font-black text-slate-950">▣</span>
+            <span class="min-w-0 flex-1">
+              <strong class="block text-base font-black sm:text-lg">Will It Fit?™ — Life-Size AR</strong>
+              <span class="mt-1 block text-xs leading-5 text-blue-100 sm:text-sm">
+                Enter machine dimensions, then place a floor-level size representation in your shop using your phone.
+              </span>
+            </span>
+            <span class="text-xl text-yellow-300" aria-hidden="true">→</span>
+          </RouterLink>
 
           <div
             v-if="machineContextLabel"
